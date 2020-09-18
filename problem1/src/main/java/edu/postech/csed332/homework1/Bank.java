@@ -1,5 +1,7 @@
 package edu.postech.csed332.homework1;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +14,9 @@ public class Bank {
 
     // TODO: add more fields to implement this class
     // (hint: use Java Collection Framework, including List, Map, Set, etc.)
-
+    private Integer numOfAccount = 100000;
+    private Map<Integer, Account> accounts = new HashMap<>();
+    private Map<String, Member> members = new HashMap<>();
     /**
      * Create a bank. Initially, there is no account.
      */
@@ -28,7 +32,7 @@ public class Bank {
      */
     Account findAccount(int accNum) {
         // TODO implement this
-        return null;
+        return accounts.get(accNum);
     }
 
     /**
@@ -39,7 +43,11 @@ public class Bank {
      */
     List<Account> findAccountByName(String name) {
         // TODO implement this
-        return null;
+        List<Account> accountList = new ArrayList<>();
+        for (Integer acc : members.get(name).getAccountList()) {
+            accountList.add(accounts.get(acc));
+        }
+        return accountList;
     }
 
     /**
@@ -52,6 +60,25 @@ public class Bank {
      */
     Account createAccount(String name, ACCTYPE accType, double initial) {
         // TODO implement this
+        if (accType == ACCTYPE.HIGH && initial >= 1000) {
+            accounts.put(numOfAccount, new HighInterestAccount(name, numOfAccount, initial));
+            if (members.containsKey(name)) {
+                members.get(name).addAccount(numOfAccount);
+            } else {
+                members.put(name, new Member(name, numOfAccount));
+            }
+            numOfAccount++;
+        } else if (accType == ACCTYPE.LOW) {
+            accounts.put(numOfAccount, new HighInterestAccount(name, numOfAccount, initial));
+            if (members.containsKey(name)) {
+                members.get(name).addAccount(numOfAccount);
+            } else {
+                members.put(name, new Member(name, numOfAccount));
+            }
+            numOfAccount++;
+        } else {
+            // TODO - CUSTOM - 에러 핸들링
+        }
         return null;
     }
 
@@ -65,5 +92,7 @@ public class Bank {
      */
     void transfer(Account src, Account dst, double amount) throws IllegalOperationException {
         // TODO implement this
+        src.withdraw(amount);
+        dst.deposit(amount);
     }
 }
