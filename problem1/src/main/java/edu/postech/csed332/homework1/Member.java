@@ -13,7 +13,7 @@ public class Member {
     }
 
     public void addAccount(Integer account){
-        this.accountList.add(account);
+        accountList.add(account);
     }
 
     public List<Integer> getAccountList() {

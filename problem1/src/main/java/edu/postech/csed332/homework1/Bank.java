@@ -14,14 +14,17 @@ public class Bank {
 
     // TODO: add more fields to implement this class
     // (hint: use Java Collection Framework, including List, Map, Set, etc.)
-    private Integer numOfAccount = 100000;
-    private Map<Integer, Account> accounts = new HashMap<>();
-    private Map<String, Member> members = new HashMap<>();
+    private Integer numOfAccount;
+    private Map<Integer, Account> accounts;
+    private Map<String, Member> members;
     /**
      * Create a bank. Initially, there is no account.
      */
     Bank() {
         // TODO implement this
+        numOfAccount = 100000;
+        accounts = new HashMap<>();
+        members = new HashMap<>();
     }
 
     /**
@@ -32,6 +35,7 @@ public class Bank {
      */
     Account findAccount(int accNum) {
         // TODO implement this
+        if (!accounts.containsKey(accNum)) return null;
         return accounts.get(accNum);
     }
 
@@ -43,6 +47,7 @@ public class Bank {
      */
     List<Account> findAccountByName(String name) {
         // TODO implement this
+        if (!members.containsKey(name)) return null;
         List<Account> accountList = new ArrayList<>();
         for (Integer acc : members.get(name).getAccountList()) {
             accountList.add(accounts.get(acc));
@@ -58,28 +63,22 @@ public class Bank {
      * @param initial initial balance
      * @return the newly created account; null if not possible
      */
+
+
     Account createAccount(String name, ACCTYPE accType, double initial) {
         // TODO implement this
         if (accType == ACCTYPE.HIGH && initial >= 1000) {
             accounts.put(numOfAccount, new HighInterestAccount(name, numOfAccount, initial));
-            if (members.containsKey(name)) {
-                members.get(name).addAccount(numOfAccount);
-            } else {
-                members.put(name, new Member(name, numOfAccount));
-            }
-            numOfAccount++;
         } else if (accType == ACCTYPE.LOW) {
-            accounts.put(numOfAccount, new HighInterestAccount(name, numOfAccount, initial));
-            if (members.containsKey(name)) {
-                members.get(name).addAccount(numOfAccount);
-            } else {
-                members.put(name, new Member(name, numOfAccount));
-            }
-            numOfAccount++;
-        } else {
-            // TODO - CUSTOM - 에러 핸들링
-        }
-        return null;
+            accounts.put(numOfAccount, new LowInterestAccount(name, numOfAccount, initial));
+        } else return null;
+
+        if (members.containsKey(name)) { members.get(name).addAccount(numOfAccount); }
+        else { members.put(name, new Member(name, numOfAccount)); }
+
+        numOfAccount++;
+
+        return findAccount(numOfAccount);
     }
 
     /**
@@ -90,9 +89,13 @@ public class Bank {
      * @param amount of money
      * @throws IllegalOperationException if not possible
      */
-    void transfer(Account src, Account dst, double amount) throws IllegalOperationException {
+    void transfer(Account src, Account dst, double amount) {
         // TODO implement this
-        src.withdraw(amount);
-        dst.deposit(amount);
+        try {
+            src.withdraw(amount);
+            dst.deposit(amount);
+        } catch (IllegalOperationException e){
+            System.out.println(e);
+        }
     }
 }

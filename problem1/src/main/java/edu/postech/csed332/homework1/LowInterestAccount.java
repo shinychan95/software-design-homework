@@ -7,12 +7,12 @@ package edu.postech.csed332.homework1;
  */
 class LowInterestAccount implements Account {
     //TODO implement this
-    String accountName;
+    String owner;
     Integer accountNumber;
     double balance;
 
-    public LowInterestAccount(String accountName, Integer accountNumber, double balance){
-        this.accountName = accountName;
+    public LowInterestAccount(String owner, Integer accountNumber, double balance){
+        this.owner = owner;
         this.accountNumber = accountNumber;
         this.balance = balance;
     }
@@ -29,17 +29,19 @@ class LowInterestAccount implements Account {
 
     public String getOwner() {
         //TODO implement this
-        return accountName;
+        return owner;
     }
 
     public void updateBalance(int elapsedDate) {
         //TODO implement this
-        this.balance = balance * Math.pow(1.005, elapsedDate);
+        for(int i=0 ; i<elapsedDate ; i++) {
+            balance = balance * 1.005;
+        }
     }
 
     public void deposit(double amount) {
         //TODO implement this
-        this.balance += amount;
+        balance += amount;
     }
 
     public void withdraw(double amount) throws IllegalOperationException {
@@ -47,6 +49,6 @@ class LowInterestAccount implements Account {
         if (amount > balance) {
             throw new IllegalOperationException("예금 부족");
         }
-        this.balance -= amount;
+        balance -= amount;
     }
 }

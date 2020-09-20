@@ -36,13 +36,13 @@ class HighInterestAccount implements Account {
     public void updateBalance(int elapsedDate) {
         //TODO implement this
         for(int i=0 ; i<elapsedDate ; i++) {
-            this.balance = balance * 1.01;
+            balance = balance * 1.01;
         }
     }
 
     public void deposit(double amount) {
         //TODO implement this
-        this.balance += amount;
+        balance += amount;
     }
 
     public void withdraw(double amount) throws IllegalOperationException {
@@ -50,6 +50,6 @@ class HighInterestAccount implements Account {
         if (balance - amount < 1000) {
             throw new IllegalOperationException("예금 부족");
         }
-        this.balance -= amount;
+        balance -= amount;
     }
 }
