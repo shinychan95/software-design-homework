@@ -21,7 +21,9 @@ public class AirMob implements Monster {
     @Override
     public Position move() {
         // TODO: implement this
-        return this.getPosition().getRelativePosition(1, 0);
+        Position p = this.getPosition().getRelativePosition(1, 0);
+
+        return (gameboard.isValidPosition(p) ? p : this.getPosition());
     }
 
     @Override

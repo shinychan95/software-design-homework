@@ -21,7 +21,7 @@ public class GameBoard {
     private final Position goal;
     private final int width, height;
     // TODO: add more fields to implement this class
-    private Map<Position, Map<LOCTYPE, Unit>> board;
+    private Map<Position, Map<Boolean, Unit>> board;
     private Map<Unit, Position> units;
     private Position[][] pMatrix;
     private Set<Monster> mobs;
@@ -69,17 +69,20 @@ public class GameBoard {
             throw new IllegalArgumentException();
         }
 
-        LOCTYPE type = (obj.isGround()) ? LOCTYPE.GROUND : LOCTYPE.AIR;
         if (pMatrix[x][y] == null) {
-            board.put(p, new HashMap<LOCTYPE, Unit>() {{ put(type, obj); }});
+            board.put(p, new HashMap<Boolean, Unit>() {{ put(obj.isGround(), obj); }});
             pMatrix[x][y] = p;
-            setUnit(obj, pMatrix[x][y]);
-        } else if (!(board.get(pMatrix[x][y]).containsKey(type))) {
-            board.get(pMatrix[x][y]).put(type, obj);
+            setUnit(obj, p);
+        } else if (!(board.get(pMatrix[x][y]).containsKey(obj.isGround()))) {
+            board.get(pMatrix[x][y]).put(obj.isGround(), obj);
             setUnit(obj, pMatrix[x][y]);
         } else {
             throw new IllegalArgumentException();
         }
+
+        System.out.println("유닛을 위치시켰습니다.");
+        System.out.println("x: " + x + ", y: " + y);
+        System.out.println("unit: " + obj.getClass().toString());
     }
 
     private void setUnit(Unit obj, Position p) {
@@ -126,13 +129,15 @@ public class GameBoard {
         // TODO: implement this
         int x = p.getX();
         int y = p.getY();
-//        if (x >= width || y >= height || x < 0 || y < 0) {
-//            throw new IllegalArgumentException();
-//        }
+
+        if (pMatrix[x][y] == null || board.get(pMatrix[x][y]).isEmpty()) {
+            return null;
+        }
 
         Set<Unit> unitsAt = new HashSet<>();
-        if (pMatrix[x][y] == null) { return unitsAt;}
-        for (Unit unit : board.get(pMatrix[x][y]).values()) unitsAt.add(unit);
+        for (Unit unit : board.get(pMatrix[x][y]).values()) {
+            unitsAt.add(unit);
+        }
         return unitsAt;
     }
 
@@ -177,50 +182,86 @@ public class GameBoard {
     public void step() {
         // TODO: implement this
         // (1)
-        for (Unit unit : getUnitsAt(goal)){
-            units.remove(unit);
-            mobs.remove(unit);
+        int x = goal.getX();
+        int y = goal.getY();
+        if (pMatrix[x][y] != null && !board.get(pMatrix[x][y]).isEmpty()) {
+            for (Unit unit : board.get(pMatrix[x][y]).values()){
+                System.out.println("Unit 탈출: " + unit.getClass().toString());
+                System.out.println("위치: " + unit.getPosition().toString());
+                board.get(unit.getPosition()).remove(unit.isGround());
+                units.remove(unit);
+                mobs.remove(unit);
+                numMobs--;
+                numMobsEscaped++;
+            }
         }
-        board.remove(pMatrix[goal.getX()][goal.getY()]);
-        pMatrix[goal.getX()][goal.getY()] = null;
-        numMobs--;
-        numMobsEscaped++;
 
         // (2)
         for (Tower t : towers) {
             for (Unit unit : t.attack() ) {
                 numMobsKilled++;
-                removeUnit(unit);
+                numMobs--;
+                board.get(unit.getPosition()).remove(unit.isGround());
+                mobs.remove(unit);
+                units.remove(unit);
             }
         }
 
         // (3)
-        Map<Position, Monster> removeMobs = new HashMap<>();
+        Map<Position, Monster> moveMobs = new HashMap<>();
         for (Monster m : mobs) {
+            System.out.println("이동 시작 지점: " + m.getPosition().toString());
             Position p = m.move();
-            for (Unit unit : getUnitsAt(p)){
-                if (unit.isGround() == m.isGround()) {
-                    removeMobs.put(p, m);
-                }
+            System.out.println("이동 목표 지점: " + p.toString());
+            if (canPlacePosition(p, m.isGround())) {
+                moveMobs.put(p, m);
+                System.out.println("이동 대기 완료");
             }
         }
-        for (Position p : removeMobs.keySet()) {
-            removeUnit(removeMobs.get(p));
-            placeUnit(removeMobs.get(p), p);
+        for (Position p : moveMobs.keySet()) {
+            removeUnit(moveMobs.get(p));
+            placeUnit(moveMobs.get(p), p);
         }
     }
 
     private void removeUnit(Unit unit) {
-        if (board.get(unit.getPosition()).size() == 2) {
-            if (unit instanceof AirMob) { board.get(unit.getPosition()).remove(LOCTYPE.AIR); }
-            else { board.get(unit.getPosition()).remove(LOCTYPE.GROUND); }
-        } else {
-            board.remove(unit.getPosition());
-            pMatrix[unit.getPosition().getX()][unit.getPosition().getY()] = null;
-        }
+        board.get(unit.getPosition()).remove(unit.isGround());
         numMobs--;
         mobs.remove(unit);
         units.remove(unit);
+    }
+
+    private void viewCurrentStatus() {
+        System.out.println("********** 현재 status **********");
+        System.out.println("---------- board ----------");
+        System.out.println("board size: " + board.size());
+        for (Position p : board.keySet()){
+            if (board.get(p).size() == 2){
+                System.out.println(p.toString());
+                System.out.println(board.get(p).size());
+            }
+        }
+        System.out.println("---------- units ----------");
+        System.out.println("units size: " + units.size());
+        System.out.println("---------- pMatrix ----------");
+        int count = 0;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (pMatrix[x][y] != null) {
+                    count++;
+                }
+            }
+        }
+        System.out.println("pMatrix size: " + count);
+        System.out.println("---------- mobs ----------");
+        System.out.println("mobs size: " + mobs.size());
+        System.out.println("---------- towers ----------");
+        System.out.println("towers size: " + towers.size());
+        System.out.println("---------- Nums ----------");
+        System.out.println("numMobs: " + numMobs);
+        System.out.println("numTowers: " + numTowers);
+        System.out.println("numMobsKilled: " + numMobsKilled);
+        System.out.println("numMobsEscaped: " + numMobsEscaped);
     }
 
     /**
@@ -234,15 +275,43 @@ public class GameBoard {
     public boolean isValid() {
         // TODO: implement this
         // (a)
-        for (Unit unit : mobs) if (!isValidPosition(unit.getPosition())) return false;
-        // (b)
+        for (Position p : units.values()) if (!isValidPosition(p)) return false;
+
+        // (b) && (c)
+        int[][] groundCount = new int[width][height];
+        int[][] airCount = new int[width][height];
+
+        for (Unit u : units.keySet()) {
+            int x = u.getPosition().getX();
+            int y = u.getPosition().getY();
+            if (u.isGround()) {
+                if (groundCount[x][y] == 0) groundCount[x][y]++;
+                else return false;
+            } else {
+                if (airCount[x][y] == 0) airCount[x][y]++;
+                else return false;
+            }
+        }
         return true;
     }
 
-    private boolean isValidPosition(Position p) {
+    public boolean isValidPosition(Position p) {
         int x = p.getX();
         int y = p.getY();
         if (x >= width || y >= height || x < 0 || y < 0) { return false; }
+        return true;
+    }
+
+    public boolean canPlacePosition(Position p, Boolean isGround) {
+        try {
+            if (getUnitsAt(p) != null){
+                for (Unit unit : getUnitsAt(p)) {
+                    if (isGround == unit.isGround()) return false;
+                }
+            }
+        } catch (Exception e) {
+            return false;
+        }
         return true;
     }
 

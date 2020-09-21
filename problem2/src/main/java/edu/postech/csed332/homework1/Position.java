@@ -51,6 +51,7 @@ public class Position {
         return x == ((Position) o).x && y == ((Position) o).y;
     }
 
+    // TODO - 꼭 지우기
     @Override
     public String toString() {
         return "Position{" +
