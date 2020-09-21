@@ -20,7 +20,15 @@ public class test {
 
         Set<String> t = new HashSet<>();
         t.add("kim");
-        t.add("kim");
+        t.remove("chan");
+        t.add("chan");
+
+        boolean[] canGo = {true, false, true, true};
+
+        for (boolean b : canGo) {
+            System.out.println(b);
+        }
+
         if (t.isEmpty()){
             System.out.println("empty");
         }

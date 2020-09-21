@@ -130,7 +130,9 @@ public class GameBoard {
         int x = p.getX();
         int y = p.getY();
 
-        if (pMatrix[x][y] == null || board.get(pMatrix[x][y]).isEmpty()) {
+        if (x >= width || y >= height || x < 0 || y < 0) throw new IllegalArgumentException();
+
+        if (pMatrix[x][y] == null) {
             return null;
         }
 
@@ -184,38 +186,33 @@ public class GameBoard {
         // (1)
         int x = goal.getX();
         int y = goal.getY();
-        if (pMatrix[x][y] != null && !board.get(pMatrix[x][y]).isEmpty()) {
+        if (pMatrix[x][y] != null) {
             for (Unit unit : board.get(pMatrix[x][y]).values()){
                 System.out.println("Unit 탈출: " + unit.getClass().toString());
                 System.out.println("위치: " + unit.getPosition().toString());
-                board.get(unit.getPosition()).remove(unit.isGround());
-                units.remove(unit);
-                mobs.remove(unit);
-                numMobs--;
+                removeUnit(unit);
                 numMobsEscaped++;
             }
         }
-
         // (2)
         for (Tower t : towers) {
             for (Unit unit : t.attack() ) {
+                removeUnit(unit);
                 numMobsKilled++;
-                numMobs--;
-                board.get(unit.getPosition()).remove(unit.isGround());
-                mobs.remove(unit);
-                units.remove(unit);
             }
         }
 
         // (3)
         Map<Position, Monster> moveMobs = new HashMap<>();
         for (Monster m : mobs) {
-            System.out.println("이동 시작 지점: " + m.getPosition().toString());
+            System.out.println("*************** MOVE ***************");
+            System.out.println(m.getClass().toString());
+            System.out.println("현재 위치: " + m.getPosition().toString());
             Position p = m.move();
-            System.out.println("이동 목표 지점: " + p.toString());
+            System.out.println("이동 대기: " + p.toString());
             if (canPlacePosition(p, m.isGround())) {
+                System.out.println("이동 **가능**");
                 moveMobs.put(p, m);
-                System.out.println("이동 대기 완료");
             }
         }
         for (Position p : moveMobs.keySet()) {
@@ -226,42 +223,13 @@ public class GameBoard {
 
     private void removeUnit(Unit unit) {
         board.get(unit.getPosition()).remove(unit.isGround());
-        numMobs--;
-        mobs.remove(unit);
+        if (board.get(unit.getPosition()).isEmpty()) {
+            board.remove(unit.getPosition());
+            pMatrix[unit.getPosition().getX()][unit.getPosition().getY()] = null;
+        }
         units.remove(unit);
-    }
-
-    private void viewCurrentStatus() {
-        System.out.println("********** 현재 status **********");
-        System.out.println("---------- board ----------");
-        System.out.println("board size: " + board.size());
-        for (Position p : board.keySet()){
-            if (board.get(p).size() == 2){
-                System.out.println(p.toString());
-                System.out.println(board.get(p).size());
-            }
-        }
-        System.out.println("---------- units ----------");
-        System.out.println("units size: " + units.size());
-        System.out.println("---------- pMatrix ----------");
-        int count = 0;
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                if (pMatrix[x][y] != null) {
-                    count++;
-                }
-            }
-        }
-        System.out.println("pMatrix size: " + count);
-        System.out.println("---------- mobs ----------");
-        System.out.println("mobs size: " + mobs.size());
-        System.out.println("---------- towers ----------");
-        System.out.println("towers size: " + towers.size());
-        System.out.println("---------- Nums ----------");
-        System.out.println("numMobs: " + numMobs);
-        System.out.println("numTowers: " + numTowers);
-        System.out.println("numMobsKilled: " + numMobsKilled);
-        System.out.println("numMobsEscaped: " + numMobsEscaped);
+        mobs.remove(unit);
+        numMobs--;
     }
 
     /**
@@ -296,9 +264,19 @@ public class GameBoard {
     }
 
     public boolean isValidPosition(Position p) {
+        if (p == null) return false;
+
         int x = p.getX();
         int y = p.getY();
-        if (x >= width || y >= height || x < 0 || y < 0) { return false; }
+
+        if (x >= width || y >= height || x < 0 || y < 0) return false;
+
+        return true;
+    }
+
+    public boolean isValidPosition(int x, int y) {
+        if (x >= width || y >= height || x < 0 || y < 0) return false;
+
         return true;
     }
 
@@ -313,6 +291,50 @@ public class GameBoard {
             return false;
         }
         return true;
+    }
+
+    public boolean isGroundTower(int x, int y){
+        if (!isValidPosition(x, y)) return false;
+
+        if (pMatrix[x][y] != null)
+            if (board.get(pMatrix[x][y]).containsKey(true))
+                if (board.get(pMatrix[x][y]).get(true) instanceof Tower)
+                    return true;
+
+        return false;
+    }
+
+    public boolean isAirTower(int x, int y){
+        if (!isValidPosition(x, y)) return false;
+
+        if (pMatrix[x][y] != null)
+            if (board.get(pMatrix[x][y]).containsKey(false))
+                if (board.get(pMatrix[x][y]).get(false) instanceof Tower)
+                    return true;
+
+        return false;
+    }
+
+    public boolean isAirMob(int x, int y){
+        if (!isValidPosition(x, y)) return false;
+
+        if (pMatrix[x][y] != null)
+            if (board.get(pMatrix[x][y]).containsKey(false))
+                if (board.get(pMatrix[x][y]).get(false) instanceof Monster)
+                    return true;
+
+        return false;
+    }
+
+    public boolean isGrondMob(int x, int y){
+        if (!isValidPosition(x, y)) return false;
+
+        if (pMatrix[x][y] != null)
+            if (board.get(pMatrix[x][y]).containsKey(true))
+                if (board.get(pMatrix[x][y]).get(true) instanceof Monster)
+                    return true;
+
+        return false;
     }
 
 
