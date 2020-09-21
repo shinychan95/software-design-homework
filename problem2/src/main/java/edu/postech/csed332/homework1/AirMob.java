@@ -47,17 +47,25 @@ public class AirMob implements Monster {
         if (gameboard.isAirTower(x - 1, y - 1)) { canGo[2] = false; canGo[3] = false; }
 
         if (gameboard.isAirTower(x + 2, y)) canGo[0] = false;
-        if (gameboard.isAirTower(x - 2, y)) canGo[2] = false;
+        if (gameboard.isAirTower(x - 2, y)) canGo[3] = false;
         if (gameboard.isAirTower(x, y + 2)) canGo[1] = false;
-        if (gameboard.isAirTower(x, y - 2)) canGo[3] = false;
-
-        if (gameboard.isAirTower(x + 2, y + 1)) canGo[0] = false;
-        if (gameboard.isAirTower(x + 2, y - 1)) canGo[0] = false;
+        if (gameboard.isAirTower(x, y - 2)) canGo[2] = false;
 
         if (!gameboard.isValidPosition(x + 1, y)) canGo[0] = false;
-        if (!gameboard.isValidPosition(x , y + 1)) canGo[1] = false;
+        if (!gameboard.isValidPosition(x, y + 1)) canGo[1] = false;
         if (!gameboard.isValidPosition(x, y - 1)) canGo[2] = false;
         if (!gameboard.isValidPosition(x - 1, y)) canGo[3] = false;
+
+        if (gameboard.isAirTower(x + 2, y + 1) && gameboard.isAirTower(x + 2, y - 1)) {
+            canGo[0] = false;
+        } else if (gameboard.isAirTower(x + 2, y + 1)) {
+            canGo[1] = false;
+        } else if (gameboard.isAirTower(x + 2, y - 1)) {
+            canGo[2] = false;
+        }
+
+        if (gameboard.isAirTower(x + 2, y) && gameboard.isAirTower(x + 2, y + 2)) { canGo[1] = false; }
+        if (gameboard.isAirTower(x + 2, y) && gameboard.isAirTower(x + 2, y - 2)) { canGo[2] = false; }
 
         System.out.println("-canGo 상태-");
         for (boolean b : canGo) {
