@@ -89,13 +89,13 @@ public class Bank {
      * @param amount of money
      * @throws IllegalOperationException if not possible
      */
-    void transfer(Account src, Account dst, double amount) {
+    void transfer(Account src, Account dst, double amount) throws IllegalOperationException {
         // TODO implement this
         try {
             src.withdraw(amount);
             dst.deposit(amount);
         } catch (IllegalOperationException e){
-            System.out.println(e);
+            throw e;
         }
     }
 }

@@ -48,7 +48,7 @@ class HighInterestAccount implements Account {
     public void withdraw(double amount) throws IllegalOperationException {
         //TODO implement this
         if (balance - amount < 1000) {
-            throw new IllegalOperationException("예금 부족");
+            throw new IllegalOperationException("예금이 부족합니다.");
         }
         balance -= amount;
     }

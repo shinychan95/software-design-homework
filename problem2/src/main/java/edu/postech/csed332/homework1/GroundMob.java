@@ -55,7 +55,7 @@ public class GroundMob implements Monster {
 
         if (!gameboard.isValidPosition(x + 1, y)) canGo[0] = false;
 
-        
+
         if (!gameboard.isValidPosition(x , y + 1)) canGo[1] = false;
         if (!gameboard.isValidPosition(x, y - 1)) canGo[2] = false;
         if (!gameboard.isValidPosition(x - 1, y)) canGo[3] = false;

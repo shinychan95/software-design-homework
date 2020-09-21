@@ -3,6 +3,7 @@ package edu.postech.csed332.homework1;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,14 +55,14 @@ public class BankTest {
         wb.createAccount("James", ACCTYPE.LOW, 50000.);
         Account reqAccount = wb.findAccountByName("Thomas").get(0);
         Account resAccount = wb.findAccountByName("James").get(0);
-        wb.transfer(reqAccount, resAccount, 100000);
+        assertThrows(IllegalOperationException.class, () -> {
+            wb.transfer(reqAccount, resAccount, 100000);
+        });
         StringBuilder sb = new StringBuilder("");
         for (Account acc : wb.findAccountByName("Thomas")) {
             sb.append(Integer.toString(acc.getAccountNumber()));
         }
         assertEquals(sb.toString(), "100000100001100002");
     }
-
-
 }
 
