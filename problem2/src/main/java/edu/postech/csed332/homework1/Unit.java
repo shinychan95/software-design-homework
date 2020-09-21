@@ -25,7 +25,7 @@ public interface Unit {
      *
      * @return the position of this unit
      */
-    default Position getPosition() {
-        return getBoard().getPosition(this);
-    }
+
+
+    default Position getPosition() { return getBoard().getPosition(this); }
 }

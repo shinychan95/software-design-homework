@@ -52,6 +52,14 @@ public class Position {
     }
 
     @Override
+    public String toString() {
+        return "Position{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(x, y);
     }

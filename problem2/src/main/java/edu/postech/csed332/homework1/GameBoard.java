@@ -20,8 +20,16 @@ import java.util.*;
 public class GameBoard {
     private final Position goal;
     private final int width, height;
-
     // TODO: add more fields to implement this class
+    private Map<Position, Map<LOCTYPE, Unit>> board;
+    private Map<Unit, Position> units;
+    private Position[][] pMatrix;
+    private Set<Monster> mobs;
+    private Set<Tower> towers;
+    private int numMobs;
+    private int numTowers;
+    private int numMobsKilled;
+    private int numMobsEscaped;
 
     /**
      * Creates a game board with a given width and height. The goal position
@@ -34,8 +42,16 @@ public class GameBoard {
         this.width = width;
         this.height = height;
         goal = new Position(width - 1, height / 2);
-
         // TODO: add more lines if needed.
+        board = new HashMap<>();
+        units = new HashMap<>();
+        pMatrix = new Position[width][height];
+        mobs = new HashSet<>();
+        towers = new HashSet<>();
+        numMobs = 0;
+        numTowers = 0;
+        numMobsKilled = 0;
+        numMobsEscaped = 0;
     }
 
     /**
@@ -47,6 +63,35 @@ public class GameBoard {
      */
     public void placeUnit(Unit obj, Position p) {
         // TODO: implement this
+        int x = p.getX();
+        int y = p.getY();
+        if (x >= width || y >= height || x < 0 || y < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        LOCTYPE type = (obj.isGround()) ? LOCTYPE.GROUND : LOCTYPE.AIR;
+        if (pMatrix[x][y] == null) {
+            board.put(p, new HashMap<LOCTYPE, Unit>() {{ put(type, obj); }});
+            pMatrix[x][y] = p;
+            setUnit(obj, pMatrix[x][y]);
+        } else if (!(board.get(pMatrix[x][y]).containsKey(type))) {
+            board.get(pMatrix[x][y]).put(type, obj);
+            setUnit(obj, pMatrix[x][y]);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void setUnit(Unit obj, Position p) {
+        if (obj instanceof Monster) {
+            units.put(obj, p);
+            mobs.add((Monster) obj);
+            numMobs++;
+        } else {
+            units.put(obj, p);
+            towers.add((Tower) obj);
+            numTowers++;
+        }
     }
 
     /**
@@ -55,6 +100,19 @@ public class GameBoard {
      */
     public void clear() {
         // TODO: implement this
+        board.clear();
+        units.clear();
+        mobs.clear();
+        towers.clear();
+        numMobs = 0;
+        numTowers = 0;
+        numMobsKilled = 0;
+        numMobsEscaped = 0;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                pMatrix[x][y] = null;
+            }
+        }
     }
 
     /**
@@ -66,7 +124,16 @@ public class GameBoard {
      */
     public Set<Unit> getUnitsAt(Position p) {
         // TODO: implement this
-        return Collections.emptySet();
+        int x = p.getX();
+        int y = p.getY();
+//        if (x >= width || y >= height || x < 0 || y < 0) {
+//            throw new IllegalArgumentException();
+//        }
+
+        Set<Unit> unitsAt = new HashSet<>();
+        if (pMatrix[x][y] == null) { return unitsAt;}
+        for (Unit unit : board.get(pMatrix[x][y]).values()) unitsAt.add(unit);
+        return unitsAt;
     }
 
     /**
@@ -76,7 +143,7 @@ public class GameBoard {
      */
     public Set<Monster> getMonsters() {
         // TODO: implement this
-        return Collections.emptySet();
+        return mobs;
     }
 
     /**
@@ -86,7 +153,7 @@ public class GameBoard {
      */
     public Set<Tower> getTowers() {
         // TODO: implement this
-        return Collections.emptySet();
+        return towers;
     }
 
     /**
@@ -97,8 +164,9 @@ public class GameBoard {
      */
     public Position getPosition(Unit obj) {
         // TODO: implement this
-        return null;
+        return units.get(obj);
     }
+
 
     /**
      * Proceeds one round of a game. The behavior of this method is as follows:
@@ -108,6 +176,51 @@ public class GameBoard {
      */
     public void step() {
         // TODO: implement this
+        // (1)
+        for (Unit unit : getUnitsAt(goal)){
+            units.remove(unit);
+            mobs.remove(unit);
+        }
+        board.remove(pMatrix[goal.getX()][goal.getY()]);
+        pMatrix[goal.getX()][goal.getY()] = null;
+        numMobs--;
+        numMobsEscaped++;
+
+        // (2)
+        for (Tower t : towers) {
+            for (Unit unit : t.attack() ) {
+                numMobsKilled++;
+                removeUnit(unit);
+            }
+        }
+
+        // (3)
+        Map<Position, Monster> removeMobs = new HashMap<>();
+        for (Monster m : mobs) {
+            Position p = m.move();
+            for (Unit unit : getUnitsAt(p)){
+                if (unit.isGround() == m.isGround()) {
+                    removeMobs.put(p, m);
+                }
+            }
+        }
+        for (Position p : removeMobs.keySet()) {
+            removeUnit(removeMobs.get(p));
+            placeUnit(removeMobs.get(p), p);
+        }
+    }
+
+    private void removeUnit(Unit unit) {
+        if (board.get(unit.getPosition()).size() == 2) {
+            if (unit instanceof AirMob) { board.get(unit.getPosition()).remove(LOCTYPE.AIR); }
+            else { board.get(unit.getPosition()).remove(LOCTYPE.GROUND); }
+        } else {
+            board.remove(unit.getPosition());
+            pMatrix[unit.getPosition().getX()][unit.getPosition().getY()] = null;
+        }
+        numMobs--;
+        mobs.remove(unit);
+        units.remove(unit);
     }
 
     /**
@@ -120,8 +233,20 @@ public class GameBoard {
      */
     public boolean isValid() {
         // TODO: implement this
-        return false;
+        // (a)
+        for (Unit unit : mobs) if (!isValidPosition(unit.getPosition())) return false;
+        // (b)
+        return true;
     }
+
+    private boolean isValidPosition(Position p) {
+        int x = p.getX();
+        int y = p.getY();
+        if (x >= width || y >= height || x < 0 || y < 0) { return false; }
+        return true;
+    }
+
+
 
     /**
      * Returns the number of the monsters in this board.
@@ -130,7 +255,7 @@ public class GameBoard {
      */
     public int getNumMobs() {
         // TODO: implement this
-        return 0;
+        return numMobs;
     }
 
     /**
@@ -140,7 +265,7 @@ public class GameBoard {
      */
     public int getNumTowers() {
         // TODO: implement this
-        return 0;
+        return numTowers;
     }
 
     /**
@@ -151,7 +276,7 @@ public class GameBoard {
      */
     public int getNumMobsKilled() {
         // TODO: implement this
-        return 0;
+        return numMobsKilled;
     }
 
     /**
@@ -162,7 +287,7 @@ public class GameBoard {
      */
     public int getNumMobsEscaped() {
         // TODO: implement this
-        return 0;
+        return numMobsEscaped;
     }
 
     /**

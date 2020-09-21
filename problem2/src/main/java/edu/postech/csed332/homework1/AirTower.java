@@ -1,5 +1,6 @@
 package edu.postech.csed332.homework1;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -12,19 +13,26 @@ import java.util.Set;
  */
 public class AirTower implements Tower {
 
-    public AirTower(GameBoard board) {
+    GameBoard gameboard;
+
+    public AirTower(GameBoard gameboard) {
         // TODO: implement this
+        this.gameboard = gameboard;
     }
 
     @Override
     public Set<Monster> attack() {
         // TODO: implement this
-        return null;
+        Set<Monster> mobs = new HashSet<>();
+        for (Monster m : gameboard.getMonsters()) {
+            if (!m.isGround() && this.getPosition().getDistance(m.getPosition()) == 1) mobs.add(m);
+        }
+        return mobs;
     }
 
     @Override
     public GameBoard getBoard() {
         // TODO: implement this
-        return null;
+        return gameboard;
     }
 }

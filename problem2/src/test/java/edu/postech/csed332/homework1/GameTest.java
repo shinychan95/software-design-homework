@@ -2,6 +2,7 @@ package edu.postech.csed332.homework1;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -60,9 +61,17 @@ public class GameTest {
         Position p1 = new Position(1, 1);
         Monster o2 = new GroundMob(board);
         Position p2 = new Position(1, 2);
-
+        Monster o3 = new AirMob(board);
+        Position p3 = new Position(1,2);
         board.placeUnit(o1, p1);
         board.placeUnit(o2, p2);
+        board.placeUnit(o3, p3);
+
         assertTrue(o1.attack().contains(o2));
+        Set<Unit> units = new HashSet<>();
+        units.add(o1);
+
+        assertEquals(board.getUnitsAt(p1), units);
+        assertEquals(board.getUnitsAt(p3), null);
     }
 }

@@ -11,14 +11,17 @@ package edu.postech.csed332.homework1;
  */
 public class AirMob implements Monster {
 
-    public AirMob(GameBoard board) {
+    GameBoard gameboard;
+
+    public AirMob(GameBoard gameboard) {
         // TODO: implement this
+        this.gameboard = gameboard;
     }
 
     @Override
     public Position move() {
         // TODO: implement this
-        return null;
+        return this.getPosition().getRelativePosition(1, 0);
     }
 
     @Override
@@ -30,6 +33,6 @@ public class AirMob implements Monster {
     @Override
     public GameBoard getBoard() {
         // TODO: implement this
-        return null;
+        return gameboard;
     }
 }
