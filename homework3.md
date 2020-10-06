@@ -1,3 +1,4 @@
+
 # Problem 1
 
 
@@ -24,7 +25,8 @@ Let $`G_{this} = (V_{this}, E_{this})`$ be an abstract value of the current grap
 boolean containsVertex(N vertex);
 ```
 
-- requires: vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- requires: 
+	+ vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
 - ensures:  
     + returns true if vertex is in $`V_{this}`$; and
     - returns false, otherwise.
@@ -35,17 +37,21 @@ boolean containsVertex(N vertex);
 boolean containsEdge(N source, N target);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
-
+- requires: <!-- TODO --> 
+	+ source is in $`\mathcal{N}`$ and not $`\mathsf{null}`$, target is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- ensures:  <!-- TODO -->  
+    + returns true if edge, which contains given source and target, is in $`E_{this}`$; and
+    - returns false, otherwise.
 ##### getSources
 
 ```java
 Set<N> getSources(N target);
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: <!-- TODO --> 
+	+ target is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- ensures:  <!-- TODO --> 
+	+ returns Set(N) containing all the sources, which each of them is inner variable of edge that has given target.
 
 ##### getTargets
 
@@ -53,8 +59,10 @@ Set<N> getSources(N target);
 Set<N> getTargets(N source);
 ```
 
-- requires: <!-- TODO -->
+- requires: <!-- TODO --> 
+	+ source is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
 - ensures:  <!-- TODO -->
+	+ returns Set(N) containing all the targets, which each of them is inner variable of edge that has given source.
 
 
 ## `Tree<N>`
@@ -64,6 +72,11 @@ Let $`T_{this} = (V_{this}, E_{this}, \hat{v}_{this})`$ be an abstract value of 
 ##### Class invariant 
 
 <!-- TODO -->
+
+1. There is root vertex $`\hat{v}_{this}`$.
+2. $`\hat{v}_{this}`$ has zero or more child vertices.
+3. Its child vertex also has zero or more child nodes, which are defined repeatedly.
+4. So, every vertices including $`\hat{v}_{this}`$ is in $`V_{this}`$. And every parent-child relationship describes as edge in $`E_{this}`$
 
 ##### getDepth
 
@@ -84,8 +97,10 @@ int getDepth(N vertex);
 int getHeight();
 ```
 
-- requires: <!-- TODO -->
-- ensures:  <!-- TODO -->
+- requires: <!-- TODO --> 
+	+ getRoot.isPresent()
+- ensures:  <!-- TODO --> -   
+	+ returns maximum value of depth that all vertex is in $`\mathcal{N}`$.
 
 ##### getRoot
 
@@ -93,8 +108,11 @@ int getHeight();
 Optional<N> getRoot();
 ```
 
-- requires: <!-- TODO -->
+- requires: <!-- TODO --> 
+	+ none
 - ensures:  <!-- TODO -->
+	+ returns $`\hat{v}_{this}`$ if exist; and
+	+ returns otherwise, Optional.empty()
 
 ##### getParent
 
@@ -103,7 +121,11 @@ Optional<N> getParent(N vertex);
 ```
 
 - requires: <!-- TODO -->
+	+ vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+	+ getRoot.isPresent()
 - ensures:  <!-- TODO -->
+	+ returns source that $`(source, vertex) \in E_{this}`$ if source exist; and
+	+ return otherwise, Optional.empty()
 
 
 ## `MutableGraph<N>`
@@ -123,12 +145,13 @@ and $`G_{next} = (V_{next}, E_{next})`$ be an abstract value of the graph object
 boolean addVertex(N vertex);
 ```
 
-- requires: vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+- requires: 
+	+ vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
 - ensures:  
-    + $`V_{next} = V_{this} \cup \{\texttt{vertex}\}`$; 
+    + $`V_{next} = V_{this} \cup \{ vertex \}`$; 
     + $`E_{next} = E_{this}`$ (the edges are not modified)
     + If $`G_{this}`$ satisfies the class invariant, $`G_{next}`$ also satisfies the class invariant; and
-    + returns true if and only if $`\texttt{vertex} \notin V_{this}`$.
+    + returns true if and only if $`\{ vertex \} \notin V_{this}`$.
 
 ##### removeVertex
 
@@ -137,7 +160,12 @@ boolean removeVertex(N vertex);
 ```
 
 - requires: <!-- TODO -->
+	+ vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$ 
 - ensures:  <!-- TODO -->
+	+ $`V_{next} = V_{this} - \{ vertex \}`$
+	+ $`E_{next} = E_{this} - \forall (vertex, v) - \forall (w, vertex)`$
+	+ If $`G_{this}`$ satisfies the class invariant, $`G_{next}`$ also satisfies the class invariant; and
+	+ returns true if and only if $`\{ vertex \} \in V_{next}`$.
 
 ##### addEdge
 
@@ -146,7 +174,13 @@ boolean addEdge(N source, N target);
 ```
 
 - requires: <!-- TODO -->
+	+ source is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+	+ target is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
 - ensures:  <!-- TODO -->
+	+ $`V_{next} = V_{this} \cup \{ source \} \cup \{ target \}`$
+	+ $`E_{next} = E_{this} \cup (source, target)`$
+	+ If $`G_{this}`$ satisfies the class invariant, $`G_{next}`$ also satisfies the class invariant; and
+	+ returns true if and only if $`(source, target) \notin E_{this}`$.
 
 ##### removeEdge
 
@@ -155,7 +189,13 @@ boolean removeEdge(N source, N target);
 ```
 
 - requires: <!-- TODO -->
+	+ source is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+	+ target is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
 - ensures:  <!-- TODO -->
+	+ $`V_{next} = V_{this}`$
+	+ $`E_{next} = E_{this} - (source, target)`$
+	+ If $`G_{this}`$ satisfies the class invariant, $`G_{next}`$ also satisfies the class invariant; and
+	+ returns true if and only if $`(source, target) \notin E_{next}`$.
 
 
 ## `MutableTree<N>`
@@ -172,7 +212,14 @@ boolean addVertex(N vertex);
 ```
 
 - requires: <!-- TODO -->
+	+ vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
 - ensures:  <!-- TODO -->
+	+ return false If $`V_{this} \ is \ not \ empty`$; and
+	+ $`V_{next} = \{ vertex \}`$
+	+ $`\hat{v}_{next} = \{ vertex \}`$
+	+ $`E_{next} = E_{this}`$ (the edges are not modified)
+	+ If $`T_{this}`$ satisfies the class invariant, $`T_{next}`$ also satisfies the class invariant; and
+	+ returns true if and only if $`V_{this} \ is \  empty`$.
 
 ##### removeVertex
 
@@ -181,7 +228,12 @@ boolean removeVertex(N vertex);
 ```
 
 - requires: <!-- TODO -->
+	+ vertex is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
 - ensures:  <!-- TODO -->
+	+ $`V_{next} = V_{this} - \{ vertex \} - `$ all vertices that are descendants of the given vertex
+	+ $`E_{next} = E_{this} - `$ all edges that connect with parent of vertex, vertex and descendants of vertex
+	+ If $`T_{this}`$ satisfies the class invariant, $`T_{next}`$ also satisfies the class invariant; and
+	+ returns true if and only if $`\{ vertex \} \in V_{this}`$.
 
 ##### addEdge
 
@@ -190,7 +242,14 @@ boolean addEdge(N source, N target);
 ```
 
 - requires: <!-- TODO -->
+	+ source is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+	+ target is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
 - ensures:  <!-- TODO -->
+	+ return false If $`source \notin V_{this}`$ or  $`target \in V_{This}`$; and
+	+ $`V_{next} = V_{this} \cup \{ target \}`$
+	+ $`E_{next} = E_{this} \cup (source, target)`$
+	+ If $`T_{this}`$ satisfies the class invariant, $`T_{next}`$ also satisfies the class invariant; and
+	+ returns true if and only if $`(source, target) \notin E_{this}`$.
 
 ##### removeEdge
 
@@ -199,8 +258,13 @@ boolean removeEdge(N source, N target);
 ```
 
 - requires: <!-- TODO -->
+	+ source is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
+	+ target is in $`\mathcal{N}`$ and not $`\mathsf{null}`$
 - ensures:  <!-- TODO -->
-
+	+ $`V_{next} = V_{this} - \{ target \} - `$ all vertices that are descendants of the given target
+	+ $`E_{next} = E_{this} - `$ all edges that connect with parent of target, vertex and descendants of target
+	+ If $`T_{this}`$ satisfies the class invariant, $`T_{next}`$ also satisfies the class invariant; and
+	+ returns true if and only if $`(source, target) \in E_{this}`$.
 
 # Problem 2
 
