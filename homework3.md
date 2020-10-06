@@ -99,7 +99,7 @@ int getHeight();
 
 - requires: <!-- TODO --> 
 	+ getRoot.isPresent()
-- ensures:  <!-- TODO --> -   
+- ensures:  <!-- TODO -->
 	+ returns maximum value of depth that all vertex is in $`\mathcal{N}`$.
 
 ##### getRoot
