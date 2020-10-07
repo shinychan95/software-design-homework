@@ -12,6 +12,14 @@ import java.util.stream.Collectors;
  *
  * @param <N> type of vertices, which must be immutable and comparable
  */
+
+/**
+ * abstract function의 경우 상속 받는 MutableTree에 나열되어 있는 함수에 해당하는데,
+ * MutableTree의 경우 Tree, MutableGraph 및 Graph를 상속받지만, 함수를 구현하는데 있어서는
+ * MutableTree 및 Tree 인터페이스에 명세된 조건, param, return에 따라 구현하였다.
+ *
+ * class invariant의 경우, homework3.md에 적힌 Tree와 MutableTree에 invariant에 해당한다.
+ */
 public class ParentPointerTree<N extends Comparable<N>> implements MutableTree<N> {
 
     private static class Node<V> {

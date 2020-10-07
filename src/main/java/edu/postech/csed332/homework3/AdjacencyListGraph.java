@@ -11,6 +11,14 @@ import java.util.stream.Collectors;
  *
  * @param <N> type of vertices, which must be immutable and comparable
  */
+
+/**
+ * abstract function의 경우 상속 받는 MutableGraph 및 Graph interface에 나열되어 있는 함수들에 해당한다.
+ * 인터페이스 내에는 함수가 어떻게 기능하는지 그리고 param, return 에 대한 명세가 적혀 있다.
+ * 각 함수 주석에 언급한 것들이 모두 충족하도록 AdjacencyListGraph class 내에 함수를 concrete하게 정의하였다.
+ *
+ * class invariant의 경우, homework3.md에 적힌 Graph와 MutableGraph의 invariant에 해당한다.
+ */
 public class AdjacencyListGraph<N extends Comparable<N>> implements MutableGraph<N> {
 
     /**
