@@ -48,79 +48,132 @@ public class ParentPointerTree<N extends Comparable<N>> implements MutableTree<N
     @Override
     public @NotNull Optional<N> getRoot() {
         // TODO: implement this
-        return Optional.empty();
+        if (root == null) return Optional.empty();
+        return Optional.of(root);
     }
 
     @Override
     public int getDepth(@NotNull N vertex) {
         // TODO: implement this
-        return 0;
+        if (root == null) throw new IllegalStateException();
+        if (!nodeMap.containsKey(vertex)) throw new IllegalArgumentException();
+
+        return nodeMap.get(vertex).depth;
     }
 
     @Override
     public int getHeight() {
         // TODO: implement this
-        return 0;
+        if (root == null) throw new IllegalStateException();
+        int max = 0;
+        for (N n : nodeMap.keySet())
+            max = (nodeMap.get(n).depth > max) ? nodeMap.get(n).depth : max;
+        return max;
     }
 
     @Override
     public boolean containsVertex(@NotNull N vertex) {
         // TODO: implement this
-        return false;
+        return nodeMap.containsKey(vertex);
     }
 
     @Override
     public boolean addVertex(@NotNull N vertex) {
         // TODO: implement this
+        if (root == null) {
+            root = vertex;
+            nodeMap.put(vertex, new Node<>(null, 0));
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean removeVertex(@NotNull N vertex) {
         // TODO: implement this
-        return false;
+        if(!nodeMap.containsKey(vertex)) return false;
+
+        if (vertex == root) {
+            root = null;
+            nodeMap.clear();
+            return true;
+        }
+
+        Set<N> children = new HashSet<N>();
+
+        for(N n : nodeMap.keySet())
+            if(nodeMap.get(n).parent == vertex)
+                children.add(n);
+
+        for(N child : children)
+            removeVertex(child);
+
+        nodeMap.remove(vertex);
+        return true;
     }
 
     @Override
     public boolean containsEdge(@NotNull N source, @NotNull N target) {
         // TODO: implement this
+        if(nodeMap.containsKey(target) && source == nodeMap.get(target).parent) return true;
         return false;
     }
 
     @Override
     public boolean addEdge(@NotNull N source, @NotNull N target) {
         // TODO: implement this
-        return false;
+        if(!nodeMap.containsKey(source)) return false;
+        if(nodeMap.containsKey(target)) return false;
+        nodeMap.put(target, new Node<>(source, nodeMap.get(source).depth + 1));
+        return true;
     }
 
     @Override
     public boolean removeEdge(@NotNull N source, @NotNull N target) {
         // TODO: implement this
-        return false;
+        if(!nodeMap.containsKey(target)) return false;
+        if(nodeMap.get(target).parent != source) return false;
+        removeVertex(target);
+        return true;
     }
 
     @Override
     public @NotNull Set<N> getSources(N target) {
         // TODO: implement this
-        return Collections.emptySet();
+        Set<N> s = new HashSet<>();
+        if (target == root) {
+            return s;
+        }
+        s.add(nodeMap.get(target).parent);
+        return s;
     }
 
     @Override
     public @NotNull Set<N> getTargets(N source) {
         // TODO: implement this
-        return Collections.emptySet();
+        Set<N> s = new HashSet<>();
+        for(N n : nodeMap.keySet())
+            if(nodeMap.get(n).parent == source)
+                s.add(n);
+        return s;
     }
 
     @Override
     public @NotNull Set<N> getVertices() {
         // TODO: implement this
-        return Collections.emptySet();
+        return nodeMap.keySet();
     }
 
     @Override
     public @NotNull Set<Edge<N>> getEdges() {
         // TODO: implement this
-        return Collections.emptySet();
+        Set<Edge<N>> s = new HashSet<>();
+        for(N n : nodeMap.keySet()){
+            N p = nodeMap.get(n).parent;
+            Edge<N> e = new Edge<>(p, n);
+            s.add(e);
+        }
+        return s;
     }
 
     /**
@@ -130,7 +183,27 @@ public class ParentPointerTree<N extends Comparable<N>> implements MutableTree<N
      */
     boolean checkInv() {
         // TODO: implement this
-        return false;
+        Set<N> check = new HashSet<>();
+        Set<N> next = new HashSet<>();
+        int count = 1;
+        check.add(root);
+
+        while(!check.isEmpty()) {
+            for(N n : nodeMap.keySet()){
+                if (check.contains(nodeMap.get(n).parent)) {
+                    next.add(n);
+                    count++;
+                }
+            }
+            check.clear();
+            for (N n : next) {
+                check.add(n);
+            }
+            next.clear();
+        }
+        if (count != nodeMap.size()) return false;
+
+        return true;
     }
 
     /**

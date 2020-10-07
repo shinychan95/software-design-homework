@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AdjacencyListGraph.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">homework3</a> &gt; <a href="index.source.html" class="el_package">edu.postech.csed332.homework3</a> &gt; <span class="el_source">AdjacencyListGraph.java</span></div><h1>AdjacencyListGraph.java</h1><pre class="source lang-java linenums">package edu.postech.csed332.homework3;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * An implementation of Graph with an adjacency list representation.
+ * NOTE: you should NOT add more member variables to this class.
+ *
+ * @param &lt;N&gt; type of vertices, which must be immutable and comparable
+ */
+public class AdjacencyListGraph&lt;N extends Comparable&lt;N&gt;&gt; implements MutableGraph&lt;N&gt; {
+
+    /**
+     * A map from vertices to the sets of their adjacent vertices. For example, a graph
+     * with four vertices {v1, v2, v3, v4} and four edges {(v1,v1), (v1,v2), (v3,v1), (v3,v2)}
+     * is represented by the map {v1 |-&gt; {v1,v2}, v2 |-&gt; {}, v3 -&gt; {v1,v2}, v4 -&gt; {}}.
+     */
+    private final @NotNull SortedMap&lt;N, SortedSet&lt;N&gt;&gt; adjMap;
+
+    /**
+     * Creates an empty graph
+     */
+<span class="fc" id="L26">    public AdjacencyListGraph() {</span>
+<span class="fc" id="L27">        adjMap = new TreeMap&lt;&gt;();</span>
+<span class="fc" id="L28">    }</span>
+
+    @Override
+    public boolean containsVertex(@NotNull N vertex) {
+        // TODO: implement this
+<span class="fc" id="L33">        return adjMap.containsKey(vertex);</span>
+    }
+
+    @Override
+    public boolean addVertex(@NotNull N vertex) {
+        // TODO: implement this
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (adjMap.containsKey(vertex)) return false;</span>
+<span class="fc" id="L40">        SortedSet&lt;N&gt; ss = new TreeSet&lt;&gt;();</span>
+<span class="fc" id="L41">        adjMap.put(vertex, ss);</span>
+<span class="fc" id="L42">        return true;</span>
+    }
+
+    @Override
+    public boolean removeVertex(@NotNull N vertex) {
+        // TODO: implement this
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if (!adjMap.containsKey(vertex)) return false;</span>
+<span class="fc" id="L49">        adjMap.remove(vertex);</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        for(N n : adjMap.keySet())</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">            if (adjMap.get(n).contains(vertex))</span>
+<span class="fc" id="L52">                adjMap.get(n).remove(vertex);</span>
+<span class="fc" id="L53">        return true;</span>
+    }
+
+    @Override
+    public boolean containsEdge(@NotNull N source, @NotNull N target) {
+        // TODO: implement this
+<span class="fc bfc" id="L59" title="All 4 branches covered.">        if (adjMap.containsKey(source) &amp;&amp; adjMap.get(source).contains(target)) return true;</span>
+<span class="fc" id="L60">        return false;</span>
+    }
+
+    @Override
+    public boolean addEdge(@NotNull N source, @NotNull N target) {
+        // TODO: implement this
+<span class="fc bfc" id="L66" title="All 4 branches covered.">        if (adjMap.containsKey(source) &amp;&amp; adjMap.get(source).contains(target)) return false;</span>
+
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!adjMap.containsKey(source)) adjMap.put(source, new TreeSet&lt;&gt;());</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (!adjMap.containsKey(target)) adjMap.put(target, new TreeSet&lt;&gt;());</span>
+
+<span class="fc" id="L71">        adjMap.get(source).add(target);</span>
+
+<span class="fc" id="L73">        return true;</span>
+    }
+
+    @Override
+    public boolean removeEdge(@NotNull N source, @NotNull N target) {
+        // TODO: implement this
+<span class="pc bpc" id="L79" title="1 of 4 branches missed.">        if (adjMap.containsKey(source) &amp;&amp; adjMap.get(source).contains(target)) {</span>
+<span class="fc" id="L80">            adjMap.get(source).remove(target);</span>
+<span class="fc" id="L81">            return true;</span>
+        }
+<span class="fc" id="L83">        return false;</span>
+    }
+
+    @Override
+    public @NotNull Set&lt;N&gt; getSources(N target) {
+        // TODO: implement this
+<span class="fc" id="L89">        Set&lt;N&gt; s = new HashSet&lt;&gt;();</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        for(N n : adjMap.keySet())</span>
+<span class="fc bfc" id="L91" title="All 2 branches covered.">            if (adjMap.get(n).contains(target))</span>
+<span class="fc" id="L92">                s.add(n);</span>
+<span class="fc" id="L93">        return s;</span>
+    }
+
+    @Override
+    public @NotNull Set&lt;N&gt; getTargets(N source) {
+        // TODO: implement this
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (!adjMap.containsKey(source)) return new HashSet&lt;&gt;();</span>
+<span class="fc" id="L100">        return adjMap.get(source);</span>
+    }
+
+    @Override
+    public @NotNull Set&lt;N&gt; getVertices() {
+<span class="fc" id="L105">        return Collections.unmodifiableSet(adjMap.keySet());</span>
+    }
+
+    @Override
+    public @NotNull Set&lt;Edge&lt;N&gt;&gt; getEdges() {
+<span class="fc" id="L110">        return adjMap.entrySet().stream()</span>
+<span class="fc" id="L111">                .flatMap(entry -&gt; entry.getValue().stream().map(n -&gt; new Edge&lt;&gt;(entry.getKey(), n)))</span>
+<span class="fc" id="L112">                .collect(Collectors.toUnmodifiableSet());</span>
+    }
+
+    /**
+     * Checks if all class invariants hold for this object.
+     *
+     * @return true if the representation of this graph is valid
+     */
+    boolean checkInv() {
+        // TODO: implement this
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        for(N sn : adjMap.keySet())</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">            for (N tn : adjMap.get(sn))</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">                if (!adjMap.containsKey(tn)) return false;</span>
+<span class="fc" id="L125">        return true;</span>
+    }
+
+    /**
+     * Provides a human-readable string representation for the abstract value of the graph
+     *
+     * @return a string representation
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L135">        return String.format(&quot;[vertex: {%s}, edge: {%s}]&quot;,</span>
+<span class="nc" id="L136">                getVertices().stream().map(N::toString).collect(Collectors.joining(&quot;, &quot;)),</span>
+<span class="nc" id="L137">                getEdges().stream().map(Edge::toString).collect(Collectors.joining(&quot;, &quot;)));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

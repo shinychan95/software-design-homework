@@ -27,4 +27,21 @@ public class IntegerDelegateMutableTreeTest extends AbstractMutableTreeTest<Inte
     // TODO: write more white-box test cases to achieve more code coverage, if needed.
     // You do not need to add more test methods, if you tests already meet the desired coverage.
 
+    @Test
+    void testToString() {
+        Assertions.assertTrue(tree.addVertex(v1));
+        Assertions.assertTrue(tree.addEdge(v1, v2));
+        Assertions.assertEquals(tree.toString(), "[root: 1, vertex: {1, 2}, edge: {(1,2)}]");
+    }
+
+    @Test
+    void testCheckInv() {
+        Assertions.assertTrue(tree.addVertex(v1));
+        Assertions.assertTrue(tree.addEdge(v1, v2));
+        Assertions.assertTrue(tree.addEdge(v1, v3));
+        Assertions.assertTrue(tree.addEdge(v1, v4));
+        Assertions.assertTrue(tree.addEdge(v2, v5));
+        Assertions.assertTrue(tree.addEdge(v3, v6));
+        Assertions.assertTrue(tree.checkInv());
+    }
 }
