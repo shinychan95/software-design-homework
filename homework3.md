@@ -275,19 +275,23 @@ For each question, explain your reasoning _using the abstract specifications tha
 ##### `Tree<N>` and `Graph<N>`
 
 * Is `Tree<N>` a subtype of `Graph<N>`?
+    + Yes it is, Since `Tree<N>` inherits `Graph<N>`, the two have a common function for including vertices and edges, and their return. In other words, the functions all operate on the same principle. The difference is that in the case of `Tree<N>` there are more conditions that fit the structure. In other words, it can be said that `Tree<N>` is a structure with more conditions added in `Graph<N>`. From this point of view, it can be seen that `Tree<N>` does not exceed the class invariant of `Graph<N>`, so the precondition is not reinforced and the post condition is reinforced subtype.
 <!-- TODO -->
 
 ##### `MutableGraph<N>` and `Graph<N>`
 
 * Is `MutableGraph<N>` a subtype of `Graph<N>`
+    + Yes it is, `MutableGraph<N>` inherits `Graph<N>` and adds functions for adding and deleting vertices and edges. In other words, it can be said that `MutableGraph<N>` is a structure in which more conditions are added in `Graph<N>`. However, this point can be regarded as a subtype because the preconditions are not reinforced and the post conditions are reinforced, as `MutableGraph<N>` does not exceed the class invariant of `Graph<N>`.
 <!-- TODO -->
 
 ##### `MutableTree<N>` and `Tree<N>`
 
 * Is `MutableTree<N>` a subtype of `Tree<N>`
+    + Yes it is, `MutableTree<N>` inherits `Tree<N>`, and functions for adding and deleting vertices and edges have been added. In other words, it can be said that `MutableTree<N>` is a structure in which more conditions are added to the function in `Tree<N>`. However, this can be regarded as a subtype because the precondition is not reinforced and the post-condition is reinforced as long as `MutableTree<N>` does not exceed the class invariant of `Tree<N>`.
 <!-- TODO -->
 
 ##### `MutableTree<N>` and `MutableGraph<N>`
 
 * Is `MutableTree<N>` a subtype of `MutableGraph<N>`
+    + No it is not, `MutableTree<N>` inherits `MutableGraph<N>`, but handles the addition and deletion of vertices and edges differently. However, the difference is that it cannot be regarded as a subtype because it operates under more difficult conditions beyond the class invariant of `MutableGraph<N>`.
 <!-- TODO -->
