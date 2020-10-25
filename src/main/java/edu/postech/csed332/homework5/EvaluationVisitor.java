@@ -1,8 +1,6 @@
 package edu.postech.csed332.homework5;
 
-import edu.postech.csed332.homework5.expression.BinaryExp;
-import edu.postech.csed332.homework5.expression.NumberExp;
-import edu.postech.csed332.homework5.expression.VariableExp;
+import edu.postech.csed332.homework5.expression.*;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -33,19 +31,15 @@ public class EvaluationVisitor implements ExpVisitor<Double> {
     public Double visit(BinaryExp curExp, String operator) {
         Double l = curExp.getLeft().accept(this);
         Double r = curExp.getRight().accept(this);
-        switch (operator) {
-            case "+":
-                return l+r;
-            case "-":
-                return l-r;
-            case "*":
-                return l*r;
-            case "/":
-                return l/r;
-            case "^":
-                return Math.pow(l, r);
+
+        if (operator.equals("+")) return l+r;
+        else if (operator.equals("-")) return l-r;
+        else if (operator.equals("*")) return l*r;
+        else if (operator.equals("/")) return l/r;
+        else if (operator.equals("^")) return Math.pow(l, r);
+        else {
+            System.out.println("Invalid Argument Error Occures");
+            return null;
         }
-        System.out.println("INVALID ARGUMENT ERROR!");
-        return null;
     }
 }
