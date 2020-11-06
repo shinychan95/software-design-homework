@@ -12,6 +12,7 @@ interface GameInstance {
      * @param i row index
      * @param j column index
      * @return the number in the (i+1) row of (j+1) column
+     * 수도쿠 판에서 숫자 받아오는 메소드. 반환값이 null일 수 있으니 Optional 데이터타입 사용
      */
     Optional<Integer> getNumbers(int i, int j);
 
