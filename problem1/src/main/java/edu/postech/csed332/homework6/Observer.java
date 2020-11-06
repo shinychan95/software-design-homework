@@ -5,7 +5,7 @@ import edu.postech.csed332.homework6.events.Event;
 /**
  * An observer that can observe subjects.
  */
-interface Observer {
+interface   Observer {
     /**
      * This method is called whenever the observed object is changed.
      *

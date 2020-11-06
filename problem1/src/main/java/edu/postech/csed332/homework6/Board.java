@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Board {
     //TODO: add private member variables for Board
+    private GameInstance game;
 
     /**
      * Creates an even-odd Sudoku board
@@ -15,6 +16,8 @@ public class Board {
      */
     Board(@NotNull GameInstance game) {
         //TODO: implement this
+
+        this.game = game;
     }
 
     /**
@@ -27,7 +30,8 @@ public class Board {
     @NotNull
     Cell getCell(int i, int j) {
         //TODO: implement this
-        return null;
+        Cell cell = new Cell(game.isEven(i, j) ? Cell.Type.EVEN : Cell.Type.ODD);
+        return cell;
     }
 
     /**
