@@ -1,6 +1,7 @@
 package edu.postech.csed332.homework6;
 
 import edu.postech.csed332.homework6.events.Event;
+import edu.postech.csed332.homework6.events.SetNumberEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -67,5 +68,14 @@ public class Group implements Observer {
     @Override
     public void update(Subject caller, Event arg) {
         //TODO: implement this
+        System.out.println("Group Update");
+//        int num = ((SetNumberEvent) arg).getNumber();
+//        if (arg instanceof SetNumberEvent) {
+//            for (Cell c : group) {
+//                if (c.containsPossibility(num)) {
+//                    c.removePossibility(num);
+//                }
+//            }
+//        }
     }
 }

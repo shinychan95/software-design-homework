@@ -1,5 +1,6 @@
 package edu.postech.csed332.homework6;
 
+import edu.postech.csed332.homework6.events.SetNumberEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -43,6 +44,14 @@ public class Board {
                 rowGroup[i].addCell(cells[i][j]);
                 colGroup[j].addCell(cells[i][j]);
                 squareGroup[i / 3][j / 3].addCell(cells[i][j]);
+                cells[i][j].addGroup(rowGroup[i]);
+                cells[i][j].addGroup(colGroup[i]);
+                cells[i][j].addGroup(squareGroup[i / 3][j / 3]);
+
+                if (game.getNumbers(i, j).isPresent()) {
+                    cells[i][j].setNumber(game.getNumbers(i, j).get());
+                    cells[i][j].notifyObservers(new SetNumberEvent(game.getNumbers(i, j).get()));
+                }
             }
         }
     }

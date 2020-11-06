@@ -3,6 +3,7 @@ package edu.postech.csed332.homework6;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,8 @@ public class Cell extends Subject {
     private Type type;
     private Integer number;
     private ArrayList<Integer> possibility;
+    private ArrayList<Group> groups;
+
     /**
      * Creates an empty cell with a given type. Initially, no number is assigned.
      *
@@ -27,6 +30,13 @@ public class Cell extends Subject {
         this.type = type;
         this.number = null;
         this.possibility = new ArrayList<>();
+        this.groups = new ArrayList<>();
+
+        if (type == Type.EVEN) {
+            possibility.addAll(Arrays.asList(2, 4, 6, 8));
+        } else {
+            possibility.addAll(Arrays.asList(1, 3, 5, 7, 9));
+        }
     }
 
     /**
@@ -80,6 +90,7 @@ public class Cell extends Subject {
         addObserver(group);
 
         //TODO: implement this
+        groups.add(group);
     }
 
     /**
@@ -91,7 +102,7 @@ public class Cell extends Subject {
     @NotNull
     public Boolean containsPossibility(int n) {
         //TODO: implement this
-        return null;
+        return possibility.contains(n);
     }
 
     /**
@@ -102,7 +113,7 @@ public class Cell extends Subject {
     @NotNull
     public Boolean emptyPossibility() {
         //TODO: implement this
-        return null;
+        return possibility.isEmpty();
     }
 
     /**
@@ -115,6 +126,7 @@ public class Cell extends Subject {
      */
     public void addPossibility(int number) {
         //TODO: implement this
+        possibility.add(number);
     }
 
     /*
@@ -125,5 +137,6 @@ public class Cell extends Subject {
      */
     public void removePossibility(int number) {
         //TODO: implement this
+        possibility.remove(number);
     }
 }

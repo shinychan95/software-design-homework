@@ -3,6 +3,9 @@ package edu.postech.csed332.homework6;
 import edu.postech.csed332.homework6.events.Event;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 
 public class CellUI extends JTextField implements Observer {
@@ -19,6 +22,34 @@ public class CellUI extends JTextField implements Observer {
         if (cell.getNumber().isEmpty()) {
             //TODO: whenever the content is changed, cell.setNumber() or cell.unsetNumber() is accordingly invoked.
             // You may use an action listener, a key listener, a document listener, etc.
+
+
+            this.getDocument().addDocumentListener(new DocumentListener() {
+                public void changedUpdate(DocumentEvent e) {
+                    System.out.println("Change Event");
+                }
+                public void removeUpdate(DocumentEvent e) {
+                    System.out.println("Hello2");
+                    try {
+                        warn(e);
+                    } catch (BadLocationException badLocationException) {
+                        badLocationException.printStackTrace();
+                    }
+                }
+                public void insertUpdate(DocumentEvent e) {
+                    System.out.println("Hello3");
+                    try {
+                        warn(e);
+                    } catch (BadLocationException badLocationException) {
+                        badLocationException.printStackTrace();
+                    }
+                }
+
+                public void warn(DocumentEvent e) throws BadLocationException {
+                    System.out.println("Hello Warn");
+                    System.out.println(e.getDocument().getText(0, 1));
+                }
+            });
         }
     }
 
@@ -49,6 +80,7 @@ public class CellUI extends JTextField implements Observer {
     @Override
     public void update(Subject caller, Event arg) {
         //TODO: implement this
+        System.out.println("CellUI Update");
     }
 
     /**
