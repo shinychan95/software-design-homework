@@ -46,8 +46,13 @@ public class GameUI {
         // 게임 판에 대한 정보는 Board에 저장되어 있다. (Cell 및 Group)
         // number와 evenflag. 숫자가 없을 경우 null로 저장되어 있다.
         // group 내부에 cell들이 들어가는데, 구조가 어떻게 되어야 할까.
-
         // 우리가 GameUI 상에서 Cell 값을 변경하는 액션은 CellUI가 감지하여 반응한다.
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+
+            }
+        }
     }
 
 }

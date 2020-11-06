@@ -3,18 +3,22 @@ package edu.postech.csed332.homework6;
 import edu.postech.csed332.homework6.events.Event;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 /**
  * A group that observes a set of cells, and maintains the invariant: if one of the members has a particular value,
  * none of its other members can have the value as a possibility.
  */
 public class Group implements Observer {
     //TODO: add private member variables for Board
+    private ArrayList<Cell> group;
 
     /**
      * Creates an empty group.
      */
     Group() {
         //TODO: implement this
+        this.group = new ArrayList<>();
     }
 
     /**
@@ -24,6 +28,7 @@ public class Group implements Observer {
      */
     void addCell(Cell cell) {
         //TODO: implement this
+        group.add(cell);
     }
 
     /**
@@ -35,7 +40,7 @@ public class Group implements Observer {
     @NotNull
     Boolean contains(@NotNull Cell cell) {
         //TODO: implement this
-        return null;
+        return group.contains(cell);
     }
 
     /**
@@ -47,7 +52,9 @@ public class Group implements Observer {
     @NotNull
     public Boolean isAvailable(int number) {
         //TODO: implement this
-        return null;
+        for (Cell c : group)
+            if (c.getNumber().get() == number) return false;
+        return true;
     }
 
     /**
