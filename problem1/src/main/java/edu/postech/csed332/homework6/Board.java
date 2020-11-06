@@ -2,12 +2,17 @@ package edu.postech.csed332.homework6;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 /**
  * An even-odd Sudoku board
  */
 public class Board {
     //TODO: add private member variables for Board
-    private GameInstance game;
+    private Cell[][] cells;
+    private Group[] rowGroup;
+    private Group[] colGroup;
+    private Group[][] squareGroup;
 
     /**
      * Creates an even-odd Sudoku board
@@ -16,8 +21,30 @@ public class Board {
      */
     Board(@NotNull GameInstance game) {
         //TODO: implement this
+        cells = new Cell[9][9];
+        rowGroup = new Group[9];
+        colGroup = new Group[9];
+        squareGroup = new Group[3][3];
 
-        this.game = game;
+        for (int i = 0; i < 9; i++) {
+            rowGroup[i] = new Group();
+            colGroup[i] = new Group();
+        }
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                squareGroup[i][j] = new Group();
+            }
+        }
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                cells[i][j] = new Cell(game.isEven(i, j) ? Cell.Type.EVEN : Cell.Type.ODD);
+                rowGroup[i].addCell(cells[i][j]);
+                colGroup[j].addCell(cells[i][j]);
+                squareGroup[i / 3][j / 3].addCell(cells[i][j]);
+            }
+        }
     }
 
     /**
@@ -30,8 +57,7 @@ public class Board {
     @NotNull
     Cell getCell(int i, int j) {
         //TODO: implement this
-        Cell cell = new Cell(game.isEven(i, j) ? Cell.Type.EVEN : Cell.Type.ODD);
-        return cell;
+        return cells[i][j];
     }
 
     /**
@@ -43,7 +69,7 @@ public class Board {
     @NotNull
     Group getRowGroup(int i) {
         //TODO: implement this
-        return null;
+        return rowGroup[i];
     }
 
     /**
@@ -55,7 +81,7 @@ public class Board {
     @NotNull
     Group getColGroup(int j) {
         //TODO: implement this
-        return null;
+        return colGroup[j];
     }
 
     /**
@@ -68,6 +94,6 @@ public class Board {
     @NotNull
     Group getSquareGroup(int n, int m) {
         //TODO: implement this
-        return null;
+        return squareGroup[n][m];
     }
 }

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module version="4">
-  <component name="ExternalSystem" externalSystem="GRADLE" externalSystemModuleGroup="edu.postech.csed332.homework6" externalSystemModuleType="sourceSet" externalSystemModuleVersion="1.0-SNAPSHOT" linkedProjectId="problem2:test" linkedProjectPath="$MODULE_DIR$/../../problem2" rootProjectPath="$MODULE_DIR$/../../problem2" />
-  <component name="TestModuleProperties" production-module="problem2.main" />
-</module>
