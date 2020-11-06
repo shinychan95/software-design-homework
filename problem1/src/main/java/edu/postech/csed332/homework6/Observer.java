@@ -8,6 +8,7 @@ import edu.postech.csed332.homework6.events.Event;
 interface   Observer {
     /**
      * This method is called whenever the observed object is changed.
+     *
      * @param caller the subject
      * @param arg    an argument passed to caller
      */

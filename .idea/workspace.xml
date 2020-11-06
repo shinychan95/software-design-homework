@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2be9b318-fba6-4890-a76d-22e083e18366" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/problem1/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/problem2/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/6.5/executionHistory/executionHistory.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/6.5/executionHistory/executionHistory.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/6.5/fileChanges/last-build.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/6.5/fileContent/fileContent.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/6.5/fileHashes/fileHashes.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/6.5/fileHashes/fileHashes.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/6.5/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/6.5/javaCompile/classAnalysis.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/6.5/javaCompile/javaCompile.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/6.5/javaCompile/taskHistory.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/problem1/.gradle/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/problem1/.gradle/checksums/md5-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/problem1/.gradle/checksums/sha1-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.gradle/vcs-1/gc.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/Board.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/Cell$Type.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/Cell.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/CellUI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/GameInstance.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/GameInstanceFactory$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/GameInstanceFactory.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/GameUI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/Group.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/Observer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/Subject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/events/DisabledEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/events/EnabledEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/events/Event.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/events/NumberEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/events/SetNumberEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/classes/java/main/edu/postech/csed332/homework6/events/UnsetNumberEvent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/build/tmp/compileJava/source-classes-mapping.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/src/main/java/edu/postech/csed332/homework6/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/problem1/src/main/java/edu/postech/csed332/homework6/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/src/main/java/edu/postech/csed332/homework6/GameUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/problem1/src/main/java/edu/postech/csed332/homework6/GameUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem1/src/main/java/edu/postech/csed332/homework6/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/problem1/src/main/java/edu/postech/csed332/homework6/Group.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/problem2/.idea/workspace.xml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/problem1">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/problem2">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA 2020.2.1\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1jucX4CxfdcqJysJb2hMTGNvWZZ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2be9b318-fba6-4890-a76d-22e083e18366" name="Default Changelist" comment="" />
+      <created>1604657454072</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1604657454072</updated>
+      <workItem from="1604657455321" duration="2997000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1604657503593">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1604657503593" />
+  </component>
+</project>
