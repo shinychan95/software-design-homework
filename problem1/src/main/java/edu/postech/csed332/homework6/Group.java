@@ -2,9 +2,11 @@ package edu.postech.csed332.homework6;
 
 import edu.postech.csed332.homework6.events.Event;
 import edu.postech.csed332.homework6.events.SetNumberEvent;
+import edu.postech.csed332.homework6.events.UnsetNumberEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * A group that observes a set of cells, and maintains the invariant: if one of the members has a particular value,
@@ -75,7 +77,14 @@ public class Group implements Observer {
     @Override
     public void update(Subject caller, Event arg) {
         //TODO: implement this
-//        for (Group g : )
-
+        if (arg instanceof SetNumberEvent) {
+            for (Cell c : this.group) {
+                c.removePossibility(((SetNumberEvent) arg).getNumber());
+            }
+        } else if (arg instanceof UnsetNumberEvent) {
+            for (Cell c : this.group) {
+                c.addPossibility(((UnsetNumberEvent) arg).getNumber());
+            }
+        }
     }
 }
