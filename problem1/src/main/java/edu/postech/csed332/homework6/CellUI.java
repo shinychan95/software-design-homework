@@ -22,32 +22,27 @@ public class CellUI extends JTextField implements Observer {
         if (cell.getNumber().isEmpty()) {
             //TODO: whenever the content is changed, cell.setNumber() or cell.unsetNumber() is accordingly invoked.
             // You may use an action listener, a key listener, a document listener, etc.
-
-
             this.getDocument().addDocumentListener(new DocumentListener() {
                 public void changedUpdate(DocumentEvent e) {
                     System.out.println("Change Event");
                 }
                 public void removeUpdate(DocumentEvent e) {
-                    System.out.println("Hello2");
+                    System.out.println("Remove Event");
                     try {
-                        warn(e);
+                        int length = e.getDocument().getLength();
+                        System.out.println(e.getDocument().getText(0, length));
                     } catch (BadLocationException badLocationException) {
                         badLocationException.printStackTrace();
                     }
                 }
                 public void insertUpdate(DocumentEvent e) {
-                    System.out.println("Hello3");
+                    System.out.println("Insert Event");
                     try {
-                        warn(e);
+                        int length = e.getDocument().getLength();
+                        System.out.println(e.getDocument().getText(0, length));
                     } catch (BadLocationException badLocationException) {
                         badLocationException.printStackTrace();
                     }
-                }
-
-                public void warn(DocumentEvent e) throws BadLocationException {
-                    System.out.println("Hello Warn");
-                    System.out.println(e.getDocument().getText(0, 1));
                 }
             });
         }

@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A factory to create a Project Structure tool window.
  */
+// ProjectStructureWindow is a top-level GUI container of our plugin.
+// MyToolWindowFactory creates ProjectStructureWindow for IntelliJ IDEA
 public class MyToolWindowFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {

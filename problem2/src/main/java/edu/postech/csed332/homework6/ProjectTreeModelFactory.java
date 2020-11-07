@@ -35,21 +35,28 @@ class ProjectTreeModelFactory {
             @Override
             public void visitPackage(PsiPackage pack) {
                 // TODO: add a new node to the parent node, and traverse the content of the package
+                System.out.println("3. " + pack.getName());
+                for (PsiPackage tmp : pack.getSubPackages()) {
+                    System.out.println("7. " + tmp.getName());
+                }
             }
 
             @Override
             public void visitClass(PsiClass aClass) {
                 // TODO: add a new node the parent node, and traverse the content of the class
+                System.out.println("4. " + aClass.getName());
             }
 
             @Override
             public void visitMethod(PsiMethod method) {
                 // TODO: add a new node to the parent node
+                System.out.println("5. " + method.getName());
             }
 
             @Override
             public void visitField(PsiField field) {
                 // TODO: add a new node to the parent node
+                System.out.println("6. " + field.getName());
             }
         };
 
@@ -72,10 +79,14 @@ class ProjectTreeModelFactory {
             @Override
             public void visitDirectory(PsiDirectory dir) {
                 final PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage(dir);
-                if (psiPackage != null && !PackageUtil.isPackageDefault(psiPackage))
+                if (psiPackage != null && !PackageUtil.isPackageDefault(psiPackage)) {
+                    System.out.println("1. " + psiPackage.getName());
                     rootPackages.add(psiPackage);
-                else
+                }
+                else {
+                    System.out.println("2. " + psiPackage.getName());
                     Arrays.stream(dir.getSubdirectories()).forEach(sd -> sd.accept(this));
+                }
             }
         };
 
