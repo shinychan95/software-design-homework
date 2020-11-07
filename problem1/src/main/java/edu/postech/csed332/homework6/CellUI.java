@@ -1,9 +1,7 @@
 package edu.postech.csed332.homework6;
 
-import edu.postech.csed332.homework6.events.EnabledEvent;
+import edu.postech.csed332.homework6.events.*;
 import edu.postech.csed332.homework6.events.Event;
-import edu.postech.csed332.homework6.events.SetNumberEvent;
-import edu.postech.csed332.homework6.events.UnsetNumberEvent;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -31,16 +29,16 @@ public class CellUI extends JTextField implements Observer {
             // You may use an action listener, a key listener, a document listener, etc.
             // 부정입력(홀짝 오류, 길이 오류, 이미 값 있음)에 대해서는 마지막에 고려하기 (여기 listener에다가 enable, disable코드 추가하면 될듯)
             this.getDocument().addDocumentListener(new DocumentListener() {
-                // 안 쓰는 update
                 public void changedUpdate(DocumentEvent e) {
-                    System.out.println("Change Event");
+
                 }
+
                 // 지워짐을 감지 -> cell.unsetNumber 함수 호출
                 public void removeUpdate(DocumentEvent e) {
                     // remove에서 발생할 수 있는 exception은 뭐가 있지?
                     try {
                         int length = e.getDocument().getLength();
-                        System.out.println(e.getDocument().getText(0, length));
+                        System.out.println("Remove : " + e.getDocument().getText(0, length));
                         cell.unsetNumber();
                     } catch (BadLocationException badLocationException) {
                         badLocationException.printStackTrace();
@@ -52,7 +50,7 @@ public class CellUI extends JTextField implements Observer {
                     // 부정 입력 감지. 1~9가 아닌 경우 throw
                     try {
                         int length = e.getDocument().getLength();
-                        System.out.println(e.getDocument().getText(0, length));
+                        System.out.println("Insert : " + e.getDocument().getText(0, length));
                         cell.setNumber(Integer.parseInt(e.getDocument().getText(0, 1)));
                     } catch (BadLocationException badLocationException) {
                         badLocationException.printStackTrace();
@@ -82,6 +80,7 @@ public class CellUI extends JTextField implements Observer {
      */
     public void setDeactivate() {
         setBorder(BorderFactory.createLineBorder(Color.RED));
+//        setBackground(Color.RED);
         setEditable(false);
     }
 
@@ -104,7 +103,8 @@ public class CellUI extends JTextField implements Observer {
         //TODO: implement this
         if (arg instanceof EnabledEvent) {
             setActivate();
-        } else if (arg instanceof UnsetNumberEvent) {
+        } else if (arg instanceof DisabledEvent) {
+//            System.out.println("CellUI.java setDeactivate() called");
             setDeactivate();
         }
     }
