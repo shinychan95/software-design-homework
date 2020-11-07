@@ -8,7 +8,8 @@ import java.util.ArrayList;
 /**
  * An even-odd Sudoku board
  */
-public class Board {
+public class
+Board {
     //TODO: add private member variables for Board
     private Cell[][] cells;
     private Group[] rowGroup;

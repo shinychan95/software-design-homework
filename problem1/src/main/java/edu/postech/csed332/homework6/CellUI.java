@@ -101,10 +101,8 @@ public class CellUI extends JTextField implements Observer {
         setFont(new Font("Times", Font.BOLD, 30));
         setHorizontalAlignment(JTextField.CENTER);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
         if (cell.getType() == Cell.Type.EVEN)
             setBackground(Color.LIGHT_GRAY);
-
         if (cell.getNumber().isPresent()) {
             setForeground(Color.BLUE);
             setText(cell.getNumber().get().toString());
