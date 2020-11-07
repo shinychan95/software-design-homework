@@ -1,5 +1,7 @@
 package edu.postech.csed332.homework6;
 
+import edu.postech.csed332.homework6.events.DisabledEvent;
+import edu.postech.csed332.homework6.events.EnabledEvent;
 import edu.postech.csed332.homework6.events.SetNumberEvent;
 import edu.postech.csed332.homework6.events.UnsetNumberEvent;
 import org.jetbrains.annotations.NotNull;
@@ -74,11 +76,12 @@ public class Cell extends Subject {
     public void setNumber(int number) {
         //TODO: implement this
         // 1. cell.getNumber.isEmpty && number in cell.possibility인지 확인
-
-        // 2. set number
-        this.number = number;
-        // 3. notify observers
-        this.notifyObservers(new SetNumberEvent(number));
+        if (this.getNumber().isEmpty() && this.containsPossibility(number)) {
+            // 2. set number
+            this.number = number;
+            // 3. notify observers
+            this.notifyObservers(new SetNumberEvent(number));
+        }
     }
 
     /**
@@ -92,12 +95,13 @@ public class Cell extends Subject {
     public void unsetNumber() {
         //TODO: implement this
         // 1. cell.getNumber이 not empty인지 확인
-
-        // 2. unset
-        int tempNum = this.number;
-        this.number = null;
-        // 3. notify observers
-        this.notifyObservers(new UnsetNumberEvent(tempNum));
+        if (this.getNumber().isPresent()) {
+            // 2. unset
+            int tempNum = this.number;
+            this.number = null;
+            // 3. notify observers
+            this.notifyObservers(new UnsetNumberEvent(tempNum));
+        }
     }
 
     /**
@@ -151,7 +155,13 @@ public class Cell extends Subject {
      */
     public void addPossibility(int number) {
         //TODO: implement this
-        possibility.add(number);
+        Type numberType = number % 2 == 0 ? Type.EVEN : Type.ODD;
+        if (this.getType() == numberType && !this.containsPossibility(number)) {
+            this.possibility.add(number);
+        }
+        if (this.possibility.size() == 1) {
+            this.notifyObservers(new EnabledEvent());
+        }
     }
 
     /**
@@ -165,6 +175,11 @@ public class Cell extends Subject {
      */
     public void removePossibility(int number) {
         //TODO: implement this
-        possibility.remove(number);
+        if (this.containsPossibility(number)) {
+            this.possibility.remove(number);
+            if (this.possibility.size() == 0) {
+                this.notifyObservers(new DisabledEvent());
+            }
+        }
     }
 }

@@ -7,6 +7,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class CellUI extends JTextField implements Observer {
 
@@ -20,11 +22,11 @@ public class CellUI extends JTextField implements Observer {
         initCellUI(cell);
 
         // CellUI를 초기화하면서 observer를 같이 붙여놓는 것.
-        // 변화가 감지되면(notify되면) observer.update에 정의해놓은 메소드가 실행
-        // observer.update에는 cell.setNumber, cell.unsetNumber 코드가 삽입되어 있음.
+        // 감지 결과에 따라 cell.setNumber, cell.unsetNumber 메소드 호출
         if (cell.getNumber().isEmpty()) {
             //TODO: whenever the content is changed, cell.setNumber() or cell.unsetNumber() is accordingly invoked.
             // You may use an action listener, a key listener, a document listener, etc.
+            // 부정입력(홀짝 오류, 길이 오류, 이미 값 있음)에 대해서는 마지막에 고려하기 (여기 listener에다가 enable, disable코드 추가하면 될듯)
             this.getDocument().addDocumentListener(new DocumentListener() {
                 // 안 쓰는 update
                 public void changedUpdate(DocumentEvent e) {
@@ -32,10 +34,11 @@ public class CellUI extends JTextField implements Observer {
                 }
                 // 지워짐을 감지 -> cell.unsetNumber 함수 호출
                 public void removeUpdate(DocumentEvent e) {
-                    System.out.println("Remove Event");
+                    // remove에서 발생할 수 있는 exception은 뭐가 있지?
                     try {
                         int length = e.getDocument().getLength();
                         System.out.println(e.getDocument().getText(0, length));
+                        cell.unsetNumber();
                     } catch (BadLocationException badLocationException) {
                         badLocationException.printStackTrace();
                     }
@@ -43,15 +46,22 @@ public class CellUI extends JTextField implements Observer {
 
                 // 타이핑을 감지 -> cell.setNumber 함수 호출
                 public void insertUpdate(DocumentEvent e) {
-                    System.out.println("Insert Event");
+                    // 부정 입력 감지. 1~9가 아닌 경우 throw
                     try {
                         int length = e.getDocument().getLength();
                         System.out.println(e.getDocument().getText(0, length));
+                        cell.setNumber(Integer.parseInt(e.getDocument().getText(0, 1)));
                     } catch (BadLocationException badLocationException) {
                         badLocationException.printStackTrace();
                     }
                 }
             });
+
+/*            this.addKeyListener(new KeyAdapter() {
+                public void keyPressed(KeyEvent ke) {
+                    Character inputValue = ke.getKeyChar();
+                }
+            });*/
         }
     }
 
