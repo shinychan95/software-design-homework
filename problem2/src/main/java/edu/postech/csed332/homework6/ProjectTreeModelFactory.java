@@ -78,24 +78,39 @@ class ProjectTreeModelFactory {
         PsiElementVisitor visitor = new PsiElementVisitor() {
             @Override
             public void visitDirectory(PsiDirectory dir) {
+                // PsiDirectory가 visitor의 입력으로 들어오면,
+                // 각 directory 하위 package를 읽는다.
                 final PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage(dir);
+                // 패키지가 존재하거나, Default package가 아니면,
                 if (psiPackage != null && !PackageUtil.isPackageDefault(psiPackage)) {
                     System.out.println("1. " + psiPackage.getName());
+                    System.out.println("1. " + psiPackage.getQualifiedName());
                     rootPackages.add(psiPackage);
                 }
+                // Print 결과, 모두 null이라서 else 구문이 실행되는데, 네 가지 경우, (왜 네 가지이지?)
+                // problem2/src/main: null -> edu
+                // problem2/src/test: null -> edu
+                // null -> META-INF
+                // null
                 else {
                     System.out.println("2. " + psiPackage.getName());
+                    System.out.println("2. " + psiPackage.getQualifiedName());
                     Arrays.stream(dir.getSubdirectories()).forEach(sd -> sd.accept(this));
                 }
             }
         };
 
+        // Allows to query and modify the list of root files and directories
         ProjectRootManager rootManager = ProjectRootManager.getInstance(project);
+
+        // The main entry point for accessing the PSI services for a project
         PsiManager psiManager = PsiManager.getInstance(project);
+
+        // rootManager는 problem2 & problem2/src/main & problem2/src/test 세 가지를 가지고 있다.
         Arrays.stream(rootManager.getContentSourceRoots())
-                .map(psiManager::findDirectory)
-                .filter(Objects::nonNull)
-                .forEach(dir -> dir.accept(visitor));
+                .map(psiManager::findDirectory)             // 세 가지 폴더에 대한 PsiDirectory 반환
+                .filter(Objects::nonNull)                   // null인 경우 제외하고
+                .forEach(dir -> dir.accept(visitor));       // 각 PsiDirectory에 대해 visitor 함수 적용
 
         return rootPackages;
     }
