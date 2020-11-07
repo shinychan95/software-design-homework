@@ -47,8 +47,10 @@ public class CellUI extends JTextField implements Observer {
                         public void run() {
                             int inputLength = text.length();
                             try {
+                                // 숫자가 아닌 값이 있을 경우 throw NumberFormatException
                                 int inputNum = Integer.parseInt(text);
                                 Cell.Type inputType = (inputNum % 2 == 0) ? Cell.Type.EVEN : Cell.Type.ODD;
+                                // 잘못된 input이 들어오는 경우 (길이 2 이상, EVEN/ODD not match, possibility에 없음)
                                 if(text.length() > 1 || cell.getType() != inputType || !cell.containsPossibility(inputNum)) {
                                     throw new NumberFormatException();
                                 }
