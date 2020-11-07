@@ -51,14 +51,20 @@ Board {
 
                 // 셀에 그룹을 추가
                 cells[i][j].addGroup(rowGroup[i]);
-                cells[i][j].addGroup(colGroup[i]);
+                cells[i][j].addGroup(colGroup[j]);
                 cells[i][j].addGroup(squareGroup[i / 3][j / 3]);
 
+            }
+        }
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
                 // 이미 숫자가 들어있는 셀
                 // -> SetNumberEvent를 날림
                 // -> group안 cell들의 possibility에 반영 가능
                 if (game.getNumbers(i, j).isPresent()) {
                     int presetNum = game.getNumbers(i, j).get();
+//                    System.out.println("Board.java presetNum : " + presetNum);
                     cells[i][j].setNumber(presetNum);
                 }
             }
