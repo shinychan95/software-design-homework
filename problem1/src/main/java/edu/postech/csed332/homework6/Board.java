@@ -27,11 +27,11 @@ public class Board {
         colGroup = new Group[9];
         squareGroup = new Group[3][3];
 
+        // 그룹을 초기화. 비어있는 상태.
         for (int i = 0; i < 9; i++) {
             rowGroup[i] = new Group();
             colGroup[i] = new Group();
         }
-
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 squareGroup[i][j] = new Group();
@@ -40,17 +40,25 @@ public class Board {
 
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
+                // Cell 생성자가 불리면서 possibility가 초기화
                 cells[i][j] = new Cell(game.isEven(i, j) ? Cell.Type.EVEN : Cell.Type.ODD);
+
+                // 그룹에 셀을 추가
                 rowGroup[i].addCell(cells[i][j]);
                 colGroup[j].addCell(cells[i][j]);
                 squareGroup[i / 3][j / 3].addCell(cells[i][j]);
+
+                // 셀에 그룹을 추가
                 cells[i][j].addGroup(rowGroup[i]);
                 cells[i][j].addGroup(colGroup[i]);
                 cells[i][j].addGroup(squareGroup[i / 3][j / 3]);
 
+                // 이미 숫자가 들어있는 셀
+                // -> SetNumberEvent를 날림
+                // -> group안 cell들의 possibility에 반영 가능
                 if (game.getNumbers(i, j).isPresent()) {
-                    cells[i][j].setNumber(game.getNumbers(i, j).get());
-                    cells[i][j].notifyObservers(new SetNumberEvent(game.getNumbers(i, j).get()));
+                    int presetNum = game.getNumbers(i, j).get();
+                    cells[i][j].setNumber(presetNum);
                 }
             }
         }

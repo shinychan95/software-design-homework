@@ -1,11 +1,10 @@
 package edu.postech.csed332.homework6;
 
+import edu.postech.csed332.homework6.events.SetNumberEvent;
+import edu.postech.csed332.homework6.events.UnsetNumberEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * A cell that has a number and a set of possibilities. Even cells can contain only even numbers, and odd cells can
@@ -66,19 +65,39 @@ public class Cell extends Subject {
      * Sets a number of this cell and notifies a SetNumberEvent, provided that the cell has previously no number
      * and the given number to be set is in the set of possibilities.
      *
+     * 셀이 비어있어야 && possibility에 있는 숫자여야 넣을 수 있음. (이 2가지만 검사함)
+     * removePossibility 함수 호출
+     * 숫자를 넣고 SetNumberEvent로 observer(그룹, UI) 들을 update
+     *
      * @param number the number
      */
     public void setNumber(int number) {
         //TODO: implement this
+        // 1. cell.getNumber.isEmpty && number in cell.possibility인지 확인
+
+        // 2. set number
         this.number = number;
+        // 3. notify observers
+        this.notifyObservers(new SetNumberEvent(number));
     }
 
     /**
      * Removes the number of this cell and notifies an UnsetNumberEvent, provided that the cell has a number.
+     *
+     * 셀에 숫자가 있어야 지울 수 있음 (이것만 검사함)
+     * addPossibility 함수 호출
+     * 숫자를 지우고, UnsetNumberEvent로 observer(그룹, UI)들을 update
+     *
      */
     public void unsetNumber() {
         //TODO: implement this
+        // 1. cell.getNumber이 not empty인지 확인
+
+        // 2. unset
+        int tempNum = this.number;
         this.number = null;
+        // 3. notify observers
+        this.notifyObservers(new UnsetNumberEvent(tempNum));
     }
 
     /**
@@ -87,9 +106,12 @@ public class Cell extends Subject {
      * @param group
      */
     public void addGroup(@NotNull Group group) {
-        addObserver(group);
-
         //TODO: implement this
+
+        // cell의 observer 리스트에 group을 추가
+        this.addObserver(group);
+
+        // cell의 group 리스트에 group을 추가
         groups.add(group);
     }
 
@@ -122,6 +144,9 @@ public class Cell extends Subject {
      * if this number is already used by another cell in the same group with this cell, the number cannot be added to
      * the set of possibilities.
      *
+     * 1. cell.possibility에 number를 넣는다 if (type 맞음 && not in group.cell.number)
+     * 2. cell.possibility가 empty -> non-empty가 될 때에만 EnabledEvent notify
+     *
      * @param number the number
      */
     public void addPossibility(int number) {
@@ -129,9 +154,12 @@ public class Cell extends Subject {
         possibility.add(number);
     }
 
-    /*
+    /**
      * Removes the possibility of a given number. Notifies a DisabledEvent if the set of possibilities becomes empty.
      * Note that even (resp., odd) cells have only even (resp., odd) possibilities.
+     *
+     * 1. cell.possibility에서 number을 제거
+     * 2. cell.possibility가 non-empty -> empty가 될 때에만 DisabledEvent notify
      *
      * @param number the number
      */

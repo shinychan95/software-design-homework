@@ -59,6 +59,13 @@ public class Group implements Observer {
     }
 
     /**
+     * 어떤 cell이 변경되면 group이 update를 해야한다. 왜?
+     * 그 셀(caller)과 연결된 groups(row, col, square) 안의 cell.possibility가 변화하기 때문
+     * 1. 어떤 cell에 숫자를 입력했을 때 (SetNumberEvent)
+     *   - caller.groups를 순회하면서 그 안의 cell.possibility에서 숫자를 제거
+     * 2. 어떤 cell에서 숫자를 지웠을 때 (UnsetNumberEvent)
+     *   - caller.groups를 순회하면서 그 안의 cell.possibility에 숫자를 추가
+     *
      * Whenever a cell is changed, this function is called. Two kinds of events, SetNumberEvent and UnsetNumberEvent,
      * should be handled here.
      *
