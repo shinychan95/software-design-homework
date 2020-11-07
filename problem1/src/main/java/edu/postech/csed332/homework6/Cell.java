@@ -176,7 +176,7 @@ public class Cell extends Subject {
     public void removePossibility(int number) {
         //TODO: implement this
         if (this.containsPossibility(number)) {
-            this.possibility.remove(number);
+            this.possibility.remove((Object) number);
             if (this.possibility.size() == 0) {
                 this.notifyObservers(new DisabledEvent());
             }

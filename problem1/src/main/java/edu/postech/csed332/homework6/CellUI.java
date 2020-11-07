@@ -1,6 +1,9 @@
 package edu.postech.csed332.homework6;
 
+import edu.postech.csed332.homework6.events.EnabledEvent;
 import edu.postech.csed332.homework6.events.Event;
+import edu.postech.csed332.homework6.events.SetNumberEvent;
+import edu.postech.csed332.homework6.events.UnsetNumberEvent;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -99,7 +102,11 @@ public class CellUI extends JTextField implements Observer {
     @Override
     public void update(Subject caller, Event arg) {
         //TODO: implement this
-        System.out.println("CellUI Update");
+        if (arg instanceof EnabledEvent) {
+            setActivate();
+        } else if (arg instanceof UnsetNumberEvent) {
+            setDeactivate();
+        }
     }
 
     /**
