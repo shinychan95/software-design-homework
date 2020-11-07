@@ -47,10 +47,11 @@ public class CellUI extends JTextField implements Observer {
                         public void run() {
                             int inputLength = text.length();
                             try {
-                                if(text.length() > 1) {
+                                int inputNum = Integer.parseInt(text);
+                                Cell.Type inputType = (inputNum % 2 == 0) ? Cell.Type.EVEN : Cell.Type.ODD;
+                                if(text.length() > 1 || cell.getType() != inputType || !cell.containsPossibility(inputNum)) {
                                     throw new NumberFormatException();
                                 }
-                                int inputNum = Integer.parseInt(text);
                                 cell.setNumber(inputNum);
                             } catch (NumberFormatException e) {
                                 cellTextField.setText(text.substring(0, inputLength - 1));
@@ -60,11 +61,6 @@ public class CellUI extends JTextField implements Observer {
                 }
             });
 
-/*            this.addKeyListener(new KeyAdapter() {
-                public void keyPressed(KeyEvent ke) {
-                    Character inputValue = ke.getKeyChar();
-                }
-            });*/
         }
     }
 
