@@ -28,33 +28,40 @@ public class CellUI extends JTextField implements Observer {
             //TODO: whenever the content is changed, cell.setNumber() or cell.unsetNumber() is accordingly invoked.
             // You may use an action listener, a key listener, a document listener, etc.
             // 부정입력(홀짝 오류, 길이 오류, 이미 값 있음)에 대해서는 마지막에 고려하기 (여기 listener에다가 enable, disable코드 추가하면 될듯)
+            JTextField cellTextField = this;
             this.getDocument().addDocumentListener(new DocumentListener() {
-                public void changedUpdate(DocumentEvent e) {
 
-                }
-
+                public void changedUpdate(DocumentEvent e) { } // 없으면 에러남
                 // 지워짐을 감지 -> cell.unsetNumber 함수 호출
                 public void removeUpdate(DocumentEvent e) {
-                    // remove에서 발생할 수 있는 exception은 뭐가 있지?
-                    try {
-                        int length = e.getDocument().getLength();
-                        System.out.println("Remove : " + e.getDocument().getText(0, length));
-                        cell.unsetNumber();
-                    } catch (BadLocationException badLocationException) {
-                        badLocationException.printStackTrace();
-                    }
+                    java.awt.EventQueue.invokeLater(new Runnable() {
+                        String text = cellTextField.getText();
+                        @Override
+                        public void run() {
+                            if(text.length() > 1) {
+                                cellTextField.setText(null);
+                            } else {
+                                cell.unsetNumber();
+                            }
+                        }
+                    });
                 }
+
 
                 // 타이핑을 감지 -> cell.setNumber 함수 호출
                 public void insertUpdate(DocumentEvent e) {
                     // 부정 입력 감지. 1~9가 아닌 경우 throw
-                    try {
-                        int length = e.getDocument().getLength();
-                        System.out.println("Insert : " + e.getDocument().getText(0, length));
-                        cell.setNumber(Integer.parseInt(e.getDocument().getText(0, 1)));
-                    } catch (BadLocationException badLocationException) {
-                        badLocationException.printStackTrace();
-                    }
+                    java.awt.EventQueue.invokeLater(new Runnable() {
+                        String text = cellTextField.getText();
+                        @Override
+                        public void run() {
+                            if(text.length() > 1) {
+                                cellTextField.setText(null);
+                            } else {
+                                cell.setNumber(Integer.parseInt(cellTextField.getText()));
+                            }
+                        }
+                    });
                 }
             });
 
