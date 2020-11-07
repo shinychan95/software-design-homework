@@ -19,13 +19,18 @@ public class CellUI extends JTextField implements Observer {
         cell.addObserver(this);
         initCellUI(cell);
 
+        // CellUI를 초기화하면서 observer를 같이 붙여놓는 것.
+        // 변화가 감지되면(notify되면) observer.update에 정의해놓은 메소드가 실행
+        // observer.update에는 cell.setNumber, cell.unsetNumber 코드가 삽입되어 있음.
         if (cell.getNumber().isEmpty()) {
             //TODO: whenever the content is changed, cell.setNumber() or cell.unsetNumber() is accordingly invoked.
             // You may use an action listener, a key listener, a document listener, etc.
             this.getDocument().addDocumentListener(new DocumentListener() {
+                // 안 쓰는 update
                 public void changedUpdate(DocumentEvent e) {
                     System.out.println("Change Event");
                 }
+                // 지워짐을 감지 -> cell.unsetNumber 함수 호출
                 public void removeUpdate(DocumentEvent e) {
                     System.out.println("Remove Event");
                     try {
@@ -35,6 +40,8 @@ public class CellUI extends JTextField implements Observer {
                         badLocationException.printStackTrace();
                     }
                 }
+
+                // 타이핑을 감지 -> cell.setNumber 함수 호출
                 public void insertUpdate(DocumentEvent e) {
                     System.out.println("Insert Event");
                     try {
@@ -47,6 +54,7 @@ public class CellUI extends JTextField implements Observer {
             });
         }
     }
+
 
     /**
      * Mark this cell UI as active
@@ -68,6 +76,12 @@ public class CellUI extends JTextField implements Observer {
      * Whenever a cell is changed, this function is called. EnabledEvent and DisabledEvent are handled here.
      * If the underlying cell is enabled, mark this cell UI as active. If the underlying cell is disabled, mark
      * this cell UI as inactive.
+     *
+     * Event의 종류에 따라
+     * 1. Set, Unset number 이벤트
+     *   - 따로 할 일 없음. cellUI가 update되어야하는 순간은 activate, deactivate될 때뿐.
+     * 2. Enabled, Disabled 이벤트
+     *   - arg 메시지에 따라서 caller.setActivate || caller.setDeactivate
      *
      * @param caller the subject
      * @param arg    an argument passed to caller
