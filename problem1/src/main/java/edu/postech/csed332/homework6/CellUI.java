@@ -34,17 +34,7 @@ public class CellUI extends JTextField implements Observer {
                 public void changedUpdate(DocumentEvent e) { } // 없으면 에러남
                 // 지워짐을 감지 -> cell.unsetNumber 함수 호출
                 public void removeUpdate(DocumentEvent e) {
-                    java.awt.EventQueue.invokeLater(new Runnable() {
-                        String text = cellTextField.getText();
-                        @Override
-                        public void run() {
-                            if(text.length() > 1) {
-                                cellTextField.setText(null);
-                            } else {
-                                cell.unsetNumber();
-                            }
-                        }
-                    });
+                    cell.unsetNumber();
                 }
 
 
@@ -55,10 +45,15 @@ public class CellUI extends JTextField implements Observer {
                         String text = cellTextField.getText();
                         @Override
                         public void run() {
-                            if(text.length() > 1) {
-                                cellTextField.setText(null);
-                            } else {
-                                cell.setNumber(Integer.parseInt(cellTextField.getText()));
+                            int inputLength = text.length();
+                            try {
+                                if(text.length() > 1) {
+                                    throw new NumberFormatException();
+                                }
+                                int inputNum = Integer.parseInt(text);
+                                cell.setNumber(inputNum);
+                            } catch (NumberFormatException e) {
+                                cellTextField.setText(text.substring(0, inputLength - 1));
                             }
                         }
                     });
