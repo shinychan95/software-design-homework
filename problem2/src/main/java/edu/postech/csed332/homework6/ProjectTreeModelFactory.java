@@ -51,7 +51,7 @@ class ProjectTreeModelFactory {
                 if (pack.getName().equals("META-INF")) return;
 //                System.out.println("******************************");
 //                System.out.println(pack.getParentPackage().toString());
-                System.out.println("Package : " + pack.getName() + "   -----   Parent : " + parent.toString());
+//                System.out.println("Package : " + pack.getName() + "   -----   Parent : " + parent.toString());
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(pack.getQualifiedName());
                 node.setUserObject(pack);
                 parent.add(node);
@@ -72,7 +72,7 @@ class ProjectTreeModelFactory {
             @Override
             public void visitClass(PsiClass aClass) {
                 // TODO: add a new node the parent node, and traverse the content of the class
-                System.out.println("Class : " + aClass.getName() + "   -----   Parent : " + parent.toString());
+//                System.out.println("Class : " + aClass.getName() + "   -----   Parent : " + parent.toString());
 
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(aClass.getQualifiedName());
                 node.setUserObject(aClass);
@@ -92,7 +92,7 @@ class ProjectTreeModelFactory {
             @Override
             public void visitMethod(PsiMethod method) {
                 // TODO: add a new node to the parent node
-                System.out.println("Method : " + method.getName() + "   -----   Parent : " + parent.toString());
+//                System.out.println("Method : " + method.getName() + "   -----   Parent : " + parent.toString());
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(method.getName());
                 node.setUserObject(method);
                 parent.add(node);
@@ -101,7 +101,7 @@ class ProjectTreeModelFactory {
             @Override
             public void visitField(PsiField field) {
                 // TODO: add a new node to the parent node
-                System.out.println("Field : " + field.getName() + "   -----   Parent : " + parent.toString());
+//                System.out.println("Field : " + field.getName() + "   -----   Parent : " + parent.toString());
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(field.getName());
                 node.setUserObject(field);
                 parent.add(node);
@@ -139,7 +139,7 @@ class ProjectTreeModelFactory {
 
                 // 디폴트가 아닌 패키지이면 -> rootPackage에 넣는다
                 if (psiPackage != null && !PackageUtil.isPackageDefault(psiPackage)) {
-                    System.out.println("1. " + psiPackage.getName());
+//                    System.out.println("1. " + psiPackage.getName());
                     rootPackages.add(psiPackage);
                 }
 
@@ -148,7 +148,7 @@ class ProjectTreeModelFactory {
                     // getName과 getQualifiedName의 차이
                         // getQualifiedName은 디폴트가 아닌 패키지의 이름만 받아온다.
                         // 디폴트패키지.getQualifiedName은 null을 리턴
-                    System.out.println("2. " + psiPackage.getName());
+//                    System.out.println("2. " + psiPackage.getName());
                     Arrays.stream(dir.getSubdirectories()).forEach(sd -> sd.accept(this));
                 }
             }
@@ -173,7 +173,7 @@ class ProjectTreeModelFactory {
                 .filter(Objects::nonNull)                   // null 제외
                 .forEach(dir -> dir.accept(visitor));       // 각 PsiDirectory에 대해 visitor 함수 적용
 
-        System.out.println("Root Packages: " + rootPackages);
+//        System.out.println("Root Packages: " + rootPackages);
         return rootPackages;
     }
 }

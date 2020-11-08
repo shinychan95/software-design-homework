@@ -45,12 +45,6 @@ class ProjectStructureTree extends Tree {
     private static final Icon defaultIcon = MetalIconFactory.getTreeLeafIcon();
 
     /**
-     * Creates a project structure "tree" for a given project.
-     *
-     * @param project a project
-     */
-
-     /**
         생성자가 하는 일
      1. 인자로 넘겨받은 projcet를 바탕으로 treeModel을 만든다.
      2. 그 treeModel의 렌더러를 수정해 우리가 원하는 아이콘이 나오도록 수정.
@@ -111,8 +105,8 @@ class ProjectStructureTree extends Tree {
                 if (e.getClickCount() == 2) {
                     // TODO: implement the double-click behavior here
                     // hint: use the navigate method of the classes PsiMethod and PsiField
-                    System.out.println(e.getComponent());
-                    System.out.println(e.getSource());
+//                    System.out.println(e.getComponent());
+//                    System.out.println(e.getSource());
                     Tree tree = (Tree) e.getSource();
                     TreePath path = null;
                     if (tree.getPathForLocation(e.getX(), e.getY()) == null) return;
@@ -167,14 +161,14 @@ class ProjectStructureTree extends Tree {
         // TODO: implement this method
         // 1. 인자로 넘겨받은 project로 새 model을 만들기 - setModel(ProjectTreeModelFactory.createProjectTreeModel(project));
         // 2. JTree의 메소드를 사용해 해당 노드를 GUI로 보여주기 - setSelectionPath, scrollPathToVisibles
-        System.out.println("***************************");
-        System.out.println("Update Tree Function called");
-        System.out.println(target.toString());
+//        System.out.println("***************************");
+//        System.out.println("Update Tree Function called");
+//        System.out.println(target.toString());
         setModel(ProjectTreeModelFactory.createProjectTreeModel(project));
 
 
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) this.getModel().getRoot();
-        System.out.println(root.getUserObject().toString());
+//        System.out.println(root.getUserObject().toString());
 
 
         Enumeration en = root.depthFirstEnumeration();
