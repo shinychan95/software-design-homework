@@ -38,7 +38,7 @@ class ProjectTreeModelFactory {
 
         // The visitor to traverse the Java hierarchy and to construct the tree
         final JavaElementVisitor visitor = new JavaElementVisitor() {
-            // TODO: add member variables if necessary
+            // TODO: add member variaables if necessary
 
             @Override
             public void visitPackage(PsiPackage pack) {
