@@ -3,6 +3,7 @@ package edu.postech.csed332.homework6;
 import com.intellij.ide.structureView.StructureView;
 import com.intellij.navigation.DirectNavigationProvider;
 import com.intellij.navigation.TargetPopupPresentation;
+import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.ColoredTreeCellRenderer;
@@ -13,8 +14,11 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalIconFactory;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,29 +70,36 @@ class ProjectStructureTree extends Tree {
                 // TODO: implement the renderer behavior here
                 // hint: use the setIcon method to assign icons, and the append method to add text
                 // package,class,field, method를 가리키는 오브젝트 ->PsiPackage, PsiClass, PsiField, PsiMethod
+
+
                 if (((DefaultMutableTreeNode) value).getUserObject() instanceof Project) {
+                    Project project = (Project) ((DefaultMutableTreeNode) value).getUserObject();
                     setIcon(projectIcon);
-                    setName(value.toString());
+                    append(project.getName());
                 }
                 else if (((DefaultMutableTreeNode) value).getUserObject() instanceof PsiPackage) {
+                    PsiPackage pkg = (PsiPackage) ((DefaultMutableTreeNode) value).getUserObject();
                     setIcon(packageIcon);
-                    setName(value.toString());
+                    append(pkg.getName());
                 }
                 else if (((DefaultMutableTreeNode) value).getUserObject() instanceof PsiClass) {
+                    PsiClass cls = (PsiClass) ((DefaultMutableTreeNode) value).getUserObject();
                     setIcon(classIcon);
-                    setName(value.toString());
+                    append(cls.getName());
                 }
                 else if (((DefaultMutableTreeNode) value).getUserObject() instanceof PsiMethod) {
+                    PsiMethod mtd = (PsiMethod) ((DefaultMutableTreeNode) value).getUserObject();
                     setIcon(methodIcon);
-                    setName(value.toString());
+                    append(mtd.getName());
                 }
                 else if (((DefaultMutableTreeNode) value).getUserObject() instanceof PsiField) {
+                    PsiField fld = (PsiField) ((DefaultMutableTreeNode) value).getUserObject();
                     setIcon(fieldIcon);
-                    setName(value.toString());
+                    append(fld.getName());
                 }
                 else {
                     setIcon(defaultIcon);
-                    setName(value.toString());
+                    append(value.toString());
                 }
             }
         });
@@ -100,9 +111,19 @@ class ProjectStructureTree extends Tree {
                 if (e.getClickCount() == 2) {
                     // TODO: implement the double-click behavior here
                     // hint: use the navigate method of the classes PsiMethod and PsiField
-                    // DirectNavigationProvider
-                    // TargetPopupPresentation t = new TargetPopupPresentation();
+                    Tree tree = (Tree) e.getComponent();
+                    TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+                    Object node = path.getLastPathComponent();
+                    PsiElement elem = null;
+                    if (node instanceof DefaultMutableTreeNode)
+                        elem = (PsiElement) ((DefaultMutableTreeNode) node).getUserObject();
 
+                    if(elem instanceof PsiMethod){
+                        ((PsiMethod) elem).navigate(true);
+                    }
+                    else if(elem instanceof PsiField){
+                        ((PsiField) elem).navigate(true);
+                    }
                 }
             }
         });
@@ -142,6 +163,21 @@ class ProjectStructureTree extends Tree {
         // TODO: implement this method
         // 1. 인자로 넘겨받은 project로 새 model을 만들기 - setModel(ProjectTreeModelFactory.createProjectTreeModel(project));
         // 2. JTree의 메소드를 사용해 해당 노드를 GUI로 보여주기 - setSelectionPath, scrollPathToVisibles
+        setModel(ProjectTreeModelFactory.createProjectTreeModel(project));
+
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) this.getModel().getRoot();
+
+        Enumeration en = root.depthFirstEnumeration();
+        TreePath path = null;
+        while (en.hasMoreElements()) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) en.nextElement();
+            if (node.getUserObject().equals(target)) {
+                path = new TreePath(node.getPath());
+                break;
+            }
+        }
+        setSelectionPath(path);
+        scrollPathToVisible(path);
     }
 
     /**
