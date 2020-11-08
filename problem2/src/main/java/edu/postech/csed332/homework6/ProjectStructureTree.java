@@ -1,5 +1,9 @@
 package edu.postech.csed332.homework6;
 
+import com.intellij.ide.structureView.StructureView;
+import com.intellij.navigation.DirectNavigationProvider;
+import com.intellij.navigation.TargetPopupPresentation;
+import com.intellij.navigation.
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.ColoredTreeCellRenderer;
@@ -55,6 +59,10 @@ class ProjectStructureTree extends Tree {
                 if (e.getClickCount() == 2) {
                     // TODO: implement the double-click behavior here
                     // hint: use the navigate method of the classes PsiMethod and PsiField
+
+                    // DirectNavigationProvider
+                    // TargetPopupPresentation t = new TargetPopupPresentation();
+
                 }
             }
         });

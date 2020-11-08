@@ -23,6 +23,10 @@ class ProjectTreeModelFactory {
      *
      * @param project a project
      * @return a tree model to describe the structure of project
+     *
+     * 프로젝트 이름은 Project 객체를 통해 알 수 있다 --> project.getName()
+     * DefaultMutableTreeNode 객체에서 정의하면서 자동으로 입력된다.
+     *
      */
     public static TreeModel createProjectTreeModel(Project project) {
         // the root node of the tree
@@ -72,6 +76,9 @@ class ProjectTreeModelFactory {
      *
      * @param project a project
      * @return a set of root packages
+     *
+     * PSI(Program Structure Interface) file is the root of a structure
+     * To iterate over the elements in a file, use psiFile.accept(new PsiRecursiveElementWalkingVisitor()...);
      */
     private static Set<PsiPackage> getRootPackages(Project project) {
         final Set<PsiPackage> rootPackages = new HashSet<>();
@@ -87,7 +94,7 @@ class ProjectTreeModelFactory {
                     System.out.println("1. " + psiPackage.getQualifiedName());
                     rootPackages.add(psiPackage);
                 }
-                // Print 결과, 모두 null이라서 else 구문이 실행되는데, 네 가지 경우, (왜 네 가지이지?)
+                // Print 결과, 모두 null이라서 else 구문이 실행되는데, 네 가지 경우, (왜 네 가지인거야...?)
                 // problem2/src/main: null -> edu
                 // problem2/src/test: null -> edu
                 // null -> META-INF
