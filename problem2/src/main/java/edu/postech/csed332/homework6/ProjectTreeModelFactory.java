@@ -47,24 +47,51 @@ class ProjectTreeModelFactory {
                 for (PsiPackage tmp : pack.getSubPackages()) {
                     System.out.println("7. " + tmp.getName());
                 }
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(pack.getQualifiedName());
+                node.setUserObject(pack);
+                root.add(node);
+                if (pack.getName().equals("META-INF")) {
+                    for (PsiPackage temp : pack.getSubPackages()) {
+                        if (temp instanceof PsiPackage) {
+                            visitPackage((PsiPackage) temp);
+                        } else if (temp instanceof PsiClass) {
+                            visitClass((PsiClass) temp);
+                        } else if (temp instanceof PsiMethod) {
+                            visitMethod((PsiMethod) temp);
+                        } else if (temp instanceof PsiField) {
+                            visitField((PsiField) temp);
+                        } else {
+
+                        }
+                    }
+                }
             }
 
             @Override
             public void visitClass(PsiClass aClass) {
                 // TODO: add a new node the parent node, and traverse the content of the class
                 System.out.println("4. " + aClass.getName());
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(aClass.getQualifiedName());
+                node.setUserObject(aClass);
+                root.add(node);
             }
 
             @Override
             public void visitMethod(PsiMethod method) {
                 // TODO: add a new node to the parent node
                 System.out.println("5. " + method.getName());
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(method.getName());
+                node.setUserObject(method);
+                root.add(node);
             }
 
             @Override
             public void visitField(PsiField field) {
                 // TODO: add a new node to the parent node
                 System.out.println("6. " + field.getName());
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(field.getName());
+                node.setUserObject(field);
+                root.add(node);
             }
         };
 

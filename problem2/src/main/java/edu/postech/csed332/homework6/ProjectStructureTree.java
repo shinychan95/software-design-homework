@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.plaf.metal.MetalIconFactory;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -64,8 +65,31 @@ class ProjectStructureTree extends Tree {
                                               boolean expanded, boolean leaf, int row, boolean hasFocus) {
                 // TODO: implement the renderer behavior here
                 // hint: use the setIcon method to assign icons, and the append method to add text
-                // if (value instanceof 오브젝트) setIcon(오브젝트 아이콘 이름)
-                    // package, class, field, method를 가리키는 오브젝트 -> PsiPackage, PsiClass, PsiField, PsiMethod
+                // package,class,field, method를 가리키는 오브젝트 ->PsiPackage, PsiClass, PsiField, PsiMethod
+                if (((DefaultMutableTreeNode) value).getUserObject() instanceof Project) {
+                    setIcon(projectIcon);
+                    setName(value.toString());
+                }
+                else if (((DefaultMutableTreeNode) value).getUserObject() instanceof PsiPackage) {
+                    setIcon(packageIcon);
+                    setName(value.toString());
+                }
+                else if (((DefaultMutableTreeNode) value).getUserObject() instanceof PsiClass) {
+                    setIcon(classIcon);
+                    setName(value.toString());
+                }
+                else if (((DefaultMutableTreeNode) value).getUserObject() instanceof PsiMethod) {
+                    setIcon(methodIcon);
+                    setName(value.toString());
+                }
+                else if (((DefaultMutableTreeNode) value).getUserObject() instanceof PsiField) {
+                    setIcon(fieldIcon);
+                    setName(value.toString());
+                }
+                else {
+                    setIcon(defaultIcon);
+                    setName(value.toString());
+                }
             }
         });
 
