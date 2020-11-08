@@ -43,12 +43,28 @@ class ProjectTreeModelFactory {
         // The visitor to traverse the Java hierarchy and to construct the tree
         final JavaElementVisitor visitor = new JavaElementVisitor() {
             // TODO: add member variaables if necessary
+            DefaultMutableTreeNode parent = root;
+
             @Override
             public void visitPackage(PsiPackage pack) {
                 // TODO: add a new node to the parent node, and traverse the content of the package
-
                 if (pack.getName().equals("META-INF")) return;
 
+                DefaultMutableTreeNode node = new DefaultMutableTreeNode(pack.getQualifiedName());
+                node.setUserObject(pack);
+                parent.add(node);
+
+                for (PsiPackage pkg : pack.getSubPackages()) {
+                    parent = node;
+                    pkg.accept(this);
+                }
+
+                for (PsiClass cls : pack.getClasses()) {
+                    parent = node;
+                    cls.accept(this);
+                }
+
+                // Problem 2 시각화를 위한 반복문
                 System.out.println("3. " + pack.getName());
                 for (PsiPackage temp1 : pack.getSubPackages()) {
                     System.out.println("7. " + temp1.getName());
@@ -59,42 +75,33 @@ class ProjectTreeModelFactory {
                             for (PsiClass temp4 : temp3.getClasses()) {
                                 System.out.println("10. " + temp4.getName());
                             }
-
+                            // 패키지 하위에 SubPackage가 없다면, 에러 없이 넘어간다.
                             for (PsiPackage temp4 : temp3.getSubPackages()) {
                                 System.out.println("11. " + temp4.toString());
                             }
                         }
                     }
                 }
-
-                DefaultMutableTreeNode node = new DefaultMutableTreeNode(pack.getQualifiedName());
-                node.setUserObject(pack);
-                root.add(node);
-//                if (pack.getName().equals("META-INF")) {
-//                    for (PsiPackage temp : pack.getSubPackages()) {
-//                        if (temp instanceof PsiPackage) {
-//                            visitPackage((PsiPackage) temp);
-//                        } else if (temp instanceof PsiClass) {
-//                            visitClass((PsiClass) temp);
-//                        } else if (temp instanceof PsiMethod) {
-//                            visitMethod((PsiMethod) temp);
-//                        } else if (temp instanceof PsiField) {
-//                            visitField((PsiField) temp);
-//                        } else {
-//
-//                        }
-//                    }
-//                }
             }
 
             @Override
             public void visitClass(PsiClass aClass) {
                 // TODO: add a new node the parent node, and traverse the content of the class
                 System.out.println("4. " + aClass.getName());
+
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(aClass.getQualifiedName());
                 node.setUserObject(aClass);
-                // 클래스의 parent 노드에 넣어줘야 계층도가 만들어지지 않을까?
-//                node.getParent()
+                parent.add(node);
+
+                for (PsiField fld : aClass.getAllFields()) {
+                    parent = node;
+                    fld.accept(this);
+                }
+
+                for (PsiMethod mtd : aClass.getAllMethods()) {
+                    parent = node;
+                    mtd.accept(this);
+                }
 
             }
 
@@ -104,7 +111,7 @@ class ProjectTreeModelFactory {
                 System.out.println("5. " + method.getName());
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(method.getName());
                 node.setUserObject(method);
-                root.add(node);
+                parent.add(node);
             }
 
             @Override
@@ -113,7 +120,7 @@ class ProjectTreeModelFactory {
                 System.out.println("6. " + field.getName());
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(field.getName());
                 node.setUserObject(field);
-                root.add(node);
+                parent.add(node);
             }
         };
 
