@@ -78,7 +78,6 @@ public class Cell extends Subject {
 
         // 1. cell.getNumber.isEmpty && number in cell.possibility인지 확인
         if (this.getNumber().isEmpty() && this.containsPossibility(number)) {
-//            System.out.println(this.possibility);
             // 2. set number
             this.number = number;
             // 3. notify observers
@@ -96,6 +95,7 @@ public class Cell extends Subject {
      */
     public void unsetNumber() {
         //TODO: implement this
+
         // 1. cell.getNumber이 not empty인지 확인
         if (this.getNumber().isPresent()) {
             // 2. unset
@@ -179,9 +179,9 @@ public class Cell extends Subject {
         //TODO: implement this
         if (this.containsPossibility(number)) {
             this.possibility.remove((Integer) number);
-//            System.out.println("Cell.java " + this.possibility);
+            // System.out.println("Cell.java " + this.possibility);
             if (this.possibility.size() == 0) {
-//                System.out.println("Cell.java - Call DisabledEvent");
+                // System.out.println("Cell.java - Call DisabledEvent");
                 this.notifyObservers(new DisabledEvent());
             }
         }

@@ -78,7 +78,7 @@ public class CellUI extends JTextField implements Observer {
      */
     public void setDeactivate() {
         setBorder(BorderFactory.createLineBorder(Color.RED));
-//        setBackground(Color.RED);
+        // setBackground(Color.RED);
         setEditable(false);
     }
 
@@ -102,7 +102,7 @@ public class CellUI extends JTextField implements Observer {
         if (arg instanceof EnabledEvent) {
             setActivate();
         } else if (arg instanceof DisabledEvent) {
-//            System.out.println("CellUI.java setDeactivate() called");
+            // System.out.println("CellUI.java setDeactivate() called");
             setDeactivate();
         }
     }
