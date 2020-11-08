@@ -21,11 +21,15 @@ class ProjectTreeModelFactory {
      * instance of {@link DefaultMutableTreeNode} that can have a user object. The user object of root is the project
      * itself, and other nodes have corresponding instances of PsiPackage, PsiClass, PsiMethod, and PsiField.
      *
+     * 자바 프로젝트의 트리모델을 만드는 메소드.
+     * 트리의 모든 노드는 DefaultMutableTreeNode의 인스턴스
+     * 그 노드와 연결된 user object는 Psipackage, PsiClass.. 의 인스턴스
+     *
      * @param project a project
      * @return a tree model to describe the structure of project
      */
     public static TreeModel createProjectTreeModel(Project project) {
-        // the root node of the tree
+        // 트리의 루트와 대응되는 유저 오브젝트는 project
         final DefaultMutableTreeNode root = new DefaultMutableTreeNode(project);
 
         // The visitor to traverse the Java hierarchy and to construct the tree

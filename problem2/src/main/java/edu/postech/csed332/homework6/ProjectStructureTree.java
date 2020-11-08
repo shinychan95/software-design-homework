@@ -21,6 +21,12 @@ import java.util.Optional;
  * mouse events for Method and Field nodes, and shows the corresponding methods or fields in the editor. Finally,
  * whenever the underlying project changes, the corresponding node of the tree GUI is automatically chosen.
  */
+
+// GUI를 제공하는 클래스 : cell renderer 클래스를 이용해 노드(패키지, 클래스, 필드, 메소드)의 이름과 아이콘을 표시함
+    // 모든 노드는 DefaultMutableTreeNode 의 인스턴스
+    // 노드의 user data는 Project, PsiPackage, PsiClass, PsiMethod, PsiField 의 인스턴스 (TODO: node와 user data의 차이는?)
+    // treeGUI를 더블클릭 -> 해당 메소드나 필드를 에디터로 보여준다.
+    // 메소드, 필드 수정 -> treeGUI가 선택되어야 한다.
 class ProjectStructureTree extends Tree {
 
     private static final Icon projectIcon = MetalIconFactory.getTreeHardDriveIcon();
@@ -31,20 +37,32 @@ class ProjectStructureTree extends Tree {
     private static final Icon defaultIcon = MetalIconFactory.getTreeLeafIcon();
 
     /**
-     * Creates a project structure tree for a given project.
+     * Creates a project structure "tree" for a given project.
      *
      * @param project a project
      */
+
+     /**
+        생성자가 하는 일
+     1. 인자로 넘겨받은 projcet를 바탕으로 treeModel을 만든다.
+     2. 그 treeModel의 렌더러를 수정해 우리가 원하는 아이콘이 나오도록 수정.
+     3. 마우스 더블클릭 감지 리스너, 트리 변경 감지 리스너를 붙임
+    */
     ProjectStructureTree(@NotNull Project project) {
+        // setModel 메소드를 호출 -> JTree에 정의된 전역변수 treeModel이 수정됨
         setModel(ProjectTreeModelFactory.createProjectTreeModel(project));
 
         // Set a cell renderer to display the name and icon of each node
+        // 이미 구현되어있는 ColoredTreeCellRenderer 함수의 메소드를 오버라이딩해서 렌더링
+        // 그 인스턴스를 받은 setCellRenderer에서 알아서 처리함 -> 신경쓰지말고 오버라이딩된 메소드만 구현
         setCellRenderer(new ColoredTreeCellRenderer() {
             @Override
             public void customizeCellRenderer(@NotNull JTree tree, Object value, boolean selected,
                                               boolean expanded, boolean leaf, int row, boolean hasFocus) {
                 // TODO: implement the renderer behavior here
                 // hint: use the setIcon method to assign icons, and the append method to add text
+                // if (value instanceof 오브젝트) setIcon(오브젝트 아이콘 이름)
+                    // package, class, field, method를 가리키는 오브젝트 -> PsiPackage, PsiClass, PsiField, PsiMethod
             }
         });
 
@@ -55,12 +73,14 @@ class ProjectStructureTree extends Tree {
                 if (e.getClickCount() == 2) {
                     // TODO: implement the double-click behavior here
                     // hint: use the navigate method of the classes PsiMethod and PsiField
+                    // 의심 : 트리모델팩토리 안의 visitMethod, visitField 메소드를 사용하지 않을까?
                 }
             }
         });
 
         // Set a Psi tree change listener to handle changes in the project. We provide code for obtaining an instance
         // of PsiField, PsiMethod, PsiClass, or PsiPackage. Implement the updateTree method below.
+        // TODO: 트리 변경 '감지'는 이미 다 구현되어 있다. 우리는 실제로 update하는 것만 구현하면 된다.
         PsiManager.getInstance(project).addPsiTreeChangeListener(new PsiTreeChangeAdapter() {
             @Override
             public void childAdded(@NotNull PsiTreeChangeEvent event) {
@@ -83,13 +103,16 @@ class ProjectStructureTree extends Tree {
      * Updates a tree according to the change in the target element, and shows the corresponding node in the Project
      * Structure tree. The simplest way is to reset a model of the tree (using setModel) and then to traverse the tree
      * to find the corresponding node to the target element. Use the methods {@link JTree::setSelectionPath} and
-     * {@link JTree::scrollPathToVisibles} to display the corresponding node in GUI.
+     * {@link JTree::scrollPathToVisibles} to display the corresponding node in GUI
      *
      * @param project a project
      * @param target  a target element
      */
+    // 파라미터로 넘겨지는 PsiElement에 따라 업데이트를 진행. 
     private void updateTree(@NotNull Project project, @NotNull PsiElement target) {
         // TODO: implement this method
+        // 1. 인자로 넘겨받은 project로 새 model을 만들기 - setModel(ProjectTreeModelFactory.createProjectTreeModel(project));
+        // 2. JTree의 메소드를 사용해 해당 노드를 GUI로 보여주기 - setSelectionPath, scrollPathToVisibles
     }
 
     /**
