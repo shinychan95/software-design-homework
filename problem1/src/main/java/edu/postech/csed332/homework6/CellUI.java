@@ -6,10 +6,8 @@ import edu.postech.csed332.homework6.events.Event;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+
 
 public class CellUI extends JTextField implements Observer {
 

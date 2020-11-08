@@ -1,9 +1,7 @@
 package edu.postech.csed332.homework6;
 
-import edu.postech.csed332.homework6.events.SetNumberEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 
 /**
  * An even-odd Sudoku board
