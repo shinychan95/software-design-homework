@@ -109,7 +109,7 @@ Board {
     }
 
     /**
-     * Returns a square group for the (n+1)-th row of (m+1)-th column, where 1 <= n, m <= 3
+     * Returns a square group for the (n+1)-th row of (m+1)-th column, where 0 <= n, m <= 2
      *
      * @param n a square row index
      * @param m a square column index
@@ -118,7 +118,7 @@ Board {
     @NotNull
     Group getSquareGroup(int n, int m) {
         //TODO: implement this
-        if (n >= 0 && i >= 0 && i < 9 && j < 9) return cells[i][j];
-        return squareGroup[n][m];
+        if (n >= 0 && m >= 0 && n <= 3 && m <= 3) return squareGroup[n][m];
+        throw new IllegalArgumentException();
     }
 }
