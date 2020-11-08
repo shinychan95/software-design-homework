@@ -4,6 +4,7 @@ import com.intellij.ide.projectView.impl.nodes.PackageUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.psi.*;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -43,28 +44,43 @@ class ProjectTreeModelFactory {
             @Override
             public void visitPackage(PsiPackage pack) {
                 // TODO: add a new node to the parent node, and traverse the content of the package
+                if (pack.getName().equals("META-INF")) return;
+
                 System.out.println("3. " + pack.getName());
-                for (PsiPackage tmp : pack.getSubPackages()) {
-                    System.out.println("7. " + tmp.getName());
+                for (PsiPackage temp1 : pack.getSubPackages()) {
+                    System.out.println("7. " + temp1.getName());
+                    for (PsiPackage temp2 : temp1.getSubPackages()) {
+                        System.out.println("8. " + temp2.getName());
+                        for (PsiPackage temp3 : temp2.getSubPackages()) {
+                            System.out.println("9. " + temp3.getName());
+                            for (PsiClass temp4 : temp3.getClasses()) {
+                                System.out.println("10. " + temp4.getName());
+                            }
+
+                            for (PsiPackage temp4 : temp3.getSubPackages()) {
+                                System.out.println("11. " + temp4.toString());
+                            }
+                        }
+                    }
                 }
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(pack.getQualifiedName());
                 node.setUserObject(pack);
                 root.add(node);
-                if (pack.getName().equals("META-INF")) {
-                    for (PsiPackage temp : pack.getSubPackages()) {
-                        if (temp instanceof PsiPackage) {
-                            visitPackage((PsiPackage) temp);
-                        } else if (temp instanceof PsiClass) {
-                            visitClass((PsiClass) temp);
-                        } else if (temp instanceof PsiMethod) {
-                            visitMethod((PsiMethod) temp);
-                        } else if (temp instanceof PsiField) {
-                            visitField((PsiField) temp);
-                        } else {
-
-                        }
-                    }
-                }
+//                if (pack.getName().equals("META-INF")) {
+//                    for (PsiPackage temp : pack.getSubPackages()) {
+//                        if (temp instanceof PsiPackage) {
+//                            visitPackage((PsiPackage) temp);
+//                        } else if (temp instanceof PsiClass) {
+//                            visitClass((PsiClass) temp);
+//                        } else if (temp instanceof PsiMethod) {
+//                            visitMethod((PsiMethod) temp);
+//                        } else if (temp instanceof PsiField) {
+//                            visitField((PsiField) temp);
+//                        } else {
+//
+//                        }
+//                    }
+//                }
             }
 
             @Override
@@ -122,7 +138,6 @@ class ProjectTreeModelFactory {
                 // 패키지가 존재하거나, Default package가 아니면,
                 if (psiPackage != null && !PackageUtil.isPackageDefault(psiPackage)) {
                     System.out.println("1. " + psiPackage.getName());
-                    System.out.println("1. " + psiPackage.getQualifiedName());
                     rootPackages.add(psiPackage);
                 }
                 // Print 결과, 모두 null이라서 else 구문이 실행되는데, 네 가지 경우, (왜 네 가지인거야...?)
@@ -132,7 +147,6 @@ class ProjectTreeModelFactory {
                 // null
                 else {
                     System.out.println("2. " + psiPackage.getName());
-                    System.out.println("2. " + psiPackage.getQualifiedName());
                     Arrays.stream(dir.getSubdirectories()).forEach(sd -> sd.accept(this));
                 }
             }
@@ -150,6 +164,7 @@ class ProjectTreeModelFactory {
                 .filter(Objects::nonNull)                   // null인 경우 제외하고
                 .forEach(dir -> dir.accept(visitor));       // 각 PsiDirectory에 대해 visitor 함수 적용
 
+        System.out.println("Root Packages: " + rootPackages);
         return rootPackages;
     }
 }
