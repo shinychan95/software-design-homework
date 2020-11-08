@@ -33,17 +33,20 @@ class ProjectTreeModelFactory {
      * DefaultMutableTreeNode 객체에서 정의하면서 자동으로 입력된다.
      *
      */
+
+    // TreeModel을 만들어서 리턴
     public static TreeModel createProjectTreeModel(Project project) {
         // 트리의 루트와 대응되는 유저 오브젝트는 project
         final DefaultMutableTreeNode root = new DefaultMutableTreeNode(project);
 
+        // 패키지, 클래스, 메소드, 필드를 traverse하는 visitor
         // The visitor to traverse the Java hierarchy and to construct the tree
         final JavaElementVisitor visitor = new JavaElementVisitor() {
             // TODO: add member variaables if necessary
-
             @Override
             public void visitPackage(PsiPackage pack) {
                 // TODO: add a new node to the parent node, and traverse the content of the package
+
                 if (pack.getName().equals("META-INF")) return;
 
                 System.out.println("3. " + pack.getName());
@@ -63,6 +66,7 @@ class ProjectTreeModelFactory {
                         }
                     }
                 }
+
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(pack.getQualifiedName());
                 node.setUserObject(pack);
                 root.add(node);
@@ -89,7 +93,9 @@ class ProjectTreeModelFactory {
                 System.out.println("4. " + aClass.getName());
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(aClass.getQualifiedName());
                 node.setUserObject(aClass);
-                root.add(node);
+                // 클래스의 parent 노드에 넣어줘야 계층도가 만들어지지 않을까?
+//                node.getParent()
+
             }
 
             @Override
@@ -127,41 +133,53 @@ class ProjectTreeModelFactory {
      * PSI(Program Structure Interface) file is the root of a structure
      * To iterate over the elements in a file, use psiFile.accept(new PsiRecursiveElementWalkingVisitor()...);
      */
+    // 루트 패키지의 집합을 리턴하는 메소드 (패키지 ~= 디렉토리 ~= 클래스 모음)
     private static Set<PsiPackage> getRootPackages(Project project) {
-        final Set<PsiPackage> rootPackages = new HashSet<>();
+        final Set<PsiPackage> rootPackages = new HashSet<>(); // 나중에 이걸 return할 것임
+
+        // 1. VISITOR : PSI element를 visit하는 일반적인 visitor를 패키지에 맞게 오버라이딩해서 사용
         PsiElementVisitor visitor = new PsiElementVisitor() {
+
+            // 디렉토리를 방문하는 메소드 (디렉토리 = 패키지 or 디폴트패키지)
             @Override
             public void visitDirectory(PsiDirectory dir) {
-                // PsiDirectory가 visitor의 입력으로 들어오면,
-                // 각 directory 하위 package를 읽는다.
+                // getPackage 메소드로 dir 하위의 패키지를 모두 받아온다
                 final PsiPackage psiPackage = JavaDirectoryService.getInstance().getPackage(dir);
-                // 패키지가 존재하거나, Default package가 아니면,
+
+                // 디폴트가 아닌 패키지이면 -> rootPackage에 넣는다
                 if (psiPackage != null && !PackageUtil.isPackageDefault(psiPackage)) {
                     System.out.println("1. " + psiPackage.getName());
                     rootPackages.add(psiPackage);
                 }
-                // Print 결과, 모두 null이라서 else 구문이 실행되는데, 네 가지 경우, (왜 네 가지인거야...?)
-                // problem2/src/main: null -> edu
-                // problem2/src/test: null -> edu
-                // null -> META-INF
-                // null
+
+                // 디폴트 패키지이면 -> 패키지 안을 계속 검사해서 디폴트가 아닌 패키지가 있는지 찾아본다
                 else {
+                    // getName과 getQualifiedName의 차이
+                        // getQualifiedName은 디폴트가 아닌 패키지의 이름만 받아온다.
+                        // 디폴트패키지.getQualifiedName은 null을 리턴
                     System.out.println("2. " + psiPackage.getName());
                     Arrays.stream(dir.getSubdirectories()).forEach(sd -> sd.accept(this));
                 }
             }
         };
 
-        // Allows to query and modify the list of root files and directories
-        ProjectRootManager rootManager = ProjectRootManager.getInstance(project);
 
-        // The main entry point for accessing the PSI services for a project
+
+        // 2. VISITOR가 방문할 모든 디렉토리를 찾아 VISITOR를 넘김
+            // '루트 매니저' : project를 넘겨서 파일, 폴더에 접근할 수 있는 권한이 있음
+            // Allows to query and modify the list of root files and directories
+        ProjectRootManager rootManager = ProjectRootManager.getInstance(project);
+            // '프사이 매니저' : PSI 오브젝트에 접근할 수 있는 매니저
+            // The main entry point for accessing the PSI services for a project
         PsiManager psiManager = PsiManager.getInstance(project);
 
-        // rootManager는 problem2 & problem2/src/main & problem2/src/test 세 가지를 가지고 있다.
-        Arrays.stream(rootManager.getContentSourceRoots())
-                .map(psiManager::findDirectory)             // 세 가지 폴더에 대한 PsiDirectory 반환
-                .filter(Objects::nonNull)                   // null인 경우 제외하고
+        // Problem2에서 바라본 content source root는 3개
+            // problem2
+            // problem2/src/main
+            // problem2/src/test
+        Arrays.stream(rootManager.getContentSourceRoots())  // VirtualFile 타입으로 리턴
+                .map(psiManager::findDirectory)             // VirtualFile에 해당하는 PsiDirectory 리턴
+                .filter(Objects::nonNull)                   // null 제외
                 .forEach(dir -> dir.accept(visitor));       // 각 PsiDirectory에 대해 visitor 함수 적용
 
         System.out.println("Root Packages: " + rootPackages);

@@ -103,8 +103,6 @@ class ProjectStructureTree extends Tree {
                     // DirectNavigationProvider
                     // TargetPopupPresentation t = new TargetPopupPresentation();
 
-                    // 의심 : 트리모델팩토리 안의 visitMethod, visitField 메소드를 사용하지 않을까?
-
                 }
             }
         });
