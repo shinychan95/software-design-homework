@@ -111,8 +111,12 @@ class ProjectStructureTree extends Tree {
                 if (e.getClickCount() == 2) {
                     // TODO: implement the double-click behavior here
                     // hint: use the navigate method of the classes PsiMethod and PsiField
-                    Tree tree = (Tree) e.getComponent();
-                    TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+                    System.out.println(e.getComponent());
+                    System.out.println(e.getSource());
+                    Tree tree = (Tree) e.getSource();
+                    TreePath path = null;
+                    if (tree.getPathForLocation(e.getX(), e.getY()) == null) return;
+                    else path = tree.getPathForLocation(e.getX(), e.getY());
                     Object node = path.getLastPathComponent();
                     PsiElement elem = null;
                     if (node instanceof DefaultMutableTreeNode)
@@ -163,9 +167,15 @@ class ProjectStructureTree extends Tree {
         // TODO: implement this method
         // 1. 인자로 넘겨받은 project로 새 model을 만들기 - setModel(ProjectTreeModelFactory.createProjectTreeModel(project));
         // 2. JTree의 메소드를 사용해 해당 노드를 GUI로 보여주기 - setSelectionPath, scrollPathToVisibles
+        System.out.println("***************************");
+        System.out.println("Update Tree Function called");
+        System.out.println(target.toString());
         setModel(ProjectTreeModelFactory.createProjectTreeModel(project));
 
+
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) this.getModel().getRoot();
+        System.out.println(root.getUserObject().toString());
+
 
         Enumeration en = root.depthFirstEnumeration();
         TreePath path = null;

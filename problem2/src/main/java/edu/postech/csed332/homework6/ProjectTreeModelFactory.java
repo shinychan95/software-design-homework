@@ -49,7 +49,9 @@ class ProjectTreeModelFactory {
             public void visitPackage(PsiPackage pack) {
                 // TODO: add a new node to the parent node, and traverse the content of the package
                 if (pack.getName().equals("META-INF")) return;
-
+//                System.out.println("******************************");
+//                System.out.println(pack.getParentPackage().toString());
+                System.out.println("Package : " + pack.getName() + "   -----   Parent : " + parent.toString());
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(pack.getQualifiedName());
                 node.setUserObject(pack);
                 parent.add(node);
@@ -64,51 +66,33 @@ class ProjectTreeModelFactory {
                     cls.accept(this);
                 }
 
-                // Problem 2 시각화를 위한 반복문
-                System.out.println("3. " + pack.getName());
-                for (PsiPackage temp1 : pack.getSubPackages()) {
-                    System.out.println("7. " + temp1.getName());
-                    for (PsiPackage temp2 : temp1.getSubPackages()) {
-                        System.out.println("8. " + temp2.getName());
-                        for (PsiPackage temp3 : temp2.getSubPackages()) {
-                            System.out.println("9. " + temp3.getName());
-                            for (PsiClass temp4 : temp3.getClasses()) {
-                                System.out.println("10. " + temp4.getName());
-                            }
-                            // 패키지 하위에 SubPackage가 없다면, 에러 없이 넘어간다.
-                            for (PsiPackage temp4 : temp3.getSubPackages()) {
-                                System.out.println("11. " + temp4.toString());
-                            }
-                        }
-                    }
-                }
+                parent = root;
             }
 
             @Override
             public void visitClass(PsiClass aClass) {
                 // TODO: add a new node the parent node, and traverse the content of the class
-                System.out.println("4. " + aClass.getName());
+                System.out.println("Class : " + aClass.getName() + "   -----   Parent : " + parent.toString());
 
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(aClass.getQualifiedName());
                 node.setUserObject(aClass);
                 parent.add(node);
 
-                for (PsiField fld : aClass.getAllFields()) {
+                for (PsiField fld : aClass.getFields()) {
                     parent = node;
                     fld.accept(this);
                 }
 
-                for (PsiMethod mtd : aClass.getAllMethods()) {
+                for (PsiMethod mtd : aClass.getMethods()) {
                     parent = node;
                     mtd.accept(this);
                 }
-
             }
 
             @Override
             public void visitMethod(PsiMethod method) {
                 // TODO: add a new node to the parent node
-                System.out.println("5. " + method.getName());
+                System.out.println("Method : " + method.getName() + "   -----   Parent : " + parent.toString());
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(method.getName());
                 node.setUserObject(method);
                 parent.add(node);
@@ -117,7 +101,7 @@ class ProjectTreeModelFactory {
             @Override
             public void visitField(PsiField field) {
                 // TODO: add a new node to the parent node
-                System.out.println("6. " + field.getName());
+                System.out.println("Field : " + field.getName() + "   -----   Parent : " + parent.toString());
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(field.getName());
                 node.setUserObject(field);
                 parent.add(node);
