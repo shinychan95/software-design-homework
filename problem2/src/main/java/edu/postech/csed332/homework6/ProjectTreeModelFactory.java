@@ -51,7 +51,7 @@ class ProjectTreeModelFactory {
                 if (pack.getName().equals("META-INF")) return;
 //                System.out.println("******************************");
 //                System.out.println(pack.getParentPackage().toString());
-//                System.out.println("Package : " + pack.getName() + "   -----   Parent : " + parent.toString());
+                System.out.println("Package : " + pack.getName() + "   -----   Parent : " + parent.toString());
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(pack.getQualifiedName());
                 node.setUserObject(pack);
                 parent.add(node);
@@ -72,7 +72,7 @@ class ProjectTreeModelFactory {
             @Override
             public void visitClass(PsiClass aClass) {
                 // TODO: add a new node the parent node, and traverse the content of the class
-//                System.out.println("Class : " + aClass.getName() + "   -----   Parent : " + parent.toString());
+                System.out.println("Class : " + aClass.getName() + "   -----   Parent : " + parent.toString());
 
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(aClass.getQualifiedName());
                 node.setUserObject(aClass);
@@ -92,7 +92,7 @@ class ProjectTreeModelFactory {
             @Override
             public void visitMethod(PsiMethod method) {
                 // TODO: add a new node to the parent node
-//                System.out.println("Method : " + method.getName() + "   -----   Parent : " + parent.toString());
+                System.out.println("Method : " + method.getName() + "   -----   Parent : " + parent.toString());
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(method.getName());
                 node.setUserObject(method);
                 parent.add(node);
@@ -101,7 +101,7 @@ class ProjectTreeModelFactory {
             @Override
             public void visitField(PsiField field) {
                 // TODO: add a new node to the parent node
-//                System.out.println("Field : " + field.getName() + "   -----   Parent : " + parent.toString());
+                System.out.println("Field : " + field.getName() + "   -----   Parent : " + parent.toString());
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(field.getName());
                 node.setUserObject(field);
                 parent.add(node);
