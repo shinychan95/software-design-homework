@@ -62,7 +62,6 @@ Board {
                 // -> group안 cell들의 possibility에 반영 가능
                 if (game.getNumbers(i, j).isPresent()) {
                     int presetNum = game.getNumbers(i, j).get();
-//                    System.out.println("Board.java presetNum : " + presetNum);
                     cells[i][j].setNumber(presetNum);
                 }
             }
@@ -79,7 +78,8 @@ Board {
     @NotNull
     Cell getCell(int i, int j) {
         //TODO: implement this
-        return cells[i][j];
+        if (j >= 0 && i >= 0 && i < 9 && j < 9) return cells[i][j];
+        throw new IllegalArgumentException();
     }
 
     /**
@@ -91,7 +91,8 @@ Board {
     @NotNull
     Group getRowGroup(int i) {
         //TODO: implement this
-        return rowGroup[i];
+        if (i >= 0 && i < 9) return rowGroup[i];
+        throw new IllegalArgumentException();
     }
 
     /**
@@ -103,7 +104,8 @@ Board {
     @NotNull
     Group getColGroup(int j) {
         //TODO: implement this
-        return colGroup[j];
+        if (j >= 0 && j < 9) return colGroup[j];
+        throw new IllegalArgumentException();
     }
 
     /**
@@ -116,6 +118,7 @@ Board {
     @NotNull
     Group getSquareGroup(int n, int m) {
         //TODO: implement this
+        if (n >= 0 && i >= 0 && i < 9 && j < 9) return cells[i][j];
         return squareGroup[n][m];
     }
 }
