@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DelegateTree.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">homework3</a> &gt; <a href="index.source.html" class="el_package">edu.postech.csed332.homework3</a> &gt; <span class="el_source">DelegateTree.java</span></div><h1>DelegateTree.java</h1><pre class="source lang-java linenums">package edu.postech.csed332.homework3;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+/**
+ * An implementation of Tree that delegates to a given instance of Graph. This class
+ * is a wrapper of a MutableGraph instance that enforces the Tree invariant.
+ * NOTE: you should NOT add more member variables to this class.
+ *
+ * @param &lt;N&gt; type of vertices, which must be immutable and comparable
+ */
+public class DelegateTree&lt;N extends Comparable&lt;N&gt;&gt; implements MutableTree&lt;N&gt; {
+
+    /**
+     * A root vertex of this tree; {@code null} for an empty tree.
+     */
+    private @Nullable N root;
+
+    /**
+     * The underlying graph of this tree
+     */
+    private final @NotNull MutableGraph&lt;N&gt; delegate;
+
+    /**
+     * A map assigning a depth to each vertex in this tree
+     */
+    private final @NotNull Map&lt;N, Integer&gt; depthMap;
+
+    /**
+     * Creates an empty tree that delegates to a given graph.
+     *
+     * @param emptyGraph an empty graph
+     * @throws IllegalArgumentException if {@code emptyGraph} is not empty
+     */
+<span class="fc" id="L39">    public DelegateTree(@NotNull MutableGraph&lt;N&gt; emptyGraph) {</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">        if (!emptyGraph.getVertices().isEmpty())</span>
+<span class="nc" id="L41">            throw new IllegalArgumentException();</span>
+
+<span class="fc" id="L43">        delegate = emptyGraph;</span>
+<span class="fc" id="L44">        depthMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L45">    }</span>
+
+    @Override
+    public @NotNull Optional&lt;N&gt; getRoot() {
+        // TODO: implement this
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if(depthMap.isEmpty()) return Optional.empty();</span>
+<span class="fc" id="L51">        return Optional.of(root);</span>
+    }
+
+    @Override
+    public int getDepth(@NotNull N vertex) {
+        // TODO: implement this
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (depthMap.isEmpty()) throw new IllegalStateException();</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (!delegate.containsVertex(vertex)) throw new IllegalArgumentException();</span>
+<span class="fc" id="L59">        return depthMap.get(vertex);</span>
+    }
+
+    @Override
+    public int getHeight() {
+        // TODO: implement this
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (depthMap.isEmpty()) throw new IllegalStateException();</span>
+<span class="fc" id="L66">        int max = 0;</span>
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        for (N n : depthMap.keySet())</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">            max = (depthMap.get(n) &gt; max) ? depthMap.get(n) : max;</span>
+<span class="fc" id="L69">        return max;</span>
+    }
+
+    @Override
+    public boolean containsVertex(@NotNull N vertex) {
+        // TODO: implement this
+<span class="nc" id="L75">        return depthMap.containsKey(vertex);</span>
+    }
+
+    @Override
+    public boolean addVertex(@NotNull N vertex) {
+        // TODO: implement this
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (depthMap.isEmpty()) {</span>
+<span class="fc" id="L82">            root = vertex;</span>
+<span class="fc" id="L83">            depthMap.put(vertex, 0);</span>
+<span class="fc" id="L84">            return delegate.addVertex(vertex);</span>
+        }
+<span class="fc" id="L86">        return false;</span>
+    }
+
+    @Override
+    public boolean removeVertex(@NotNull N vertex) {
+        // TODO: implement this
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        if(!depthMap.containsKey(vertex)) return false;</span>
+
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (depthMap.get(vertex) == 0) {</span>
+<span class="fc" id="L95">            root = null;</span>
+<span class="fc" id="L96">            depthMap.clear();</span>
+<span class="fc" id="L97">            delegate.removeVertex(vertex);</span>
+<span class="fc" id="L98">            return true;</span>
+        }
+
+<span class="fc" id="L101">        Set&lt;N&gt; children = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L102">        Set&lt;N&gt; check = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L103">        Set&lt;N&gt; next = new HashSet&lt;&gt;();</span>
+
+<span class="fc" id="L105">        children.add(vertex);</span>
+<span class="fc" id="L106">        check.add(vertex);</span>
+
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        while (!check.isEmpty()) {</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">            for (N cn : check) {</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">                for (N tn : delegate.getTargets(cn)) {</span>
+<span class="fc" id="L111">                    children.add(tn);</span>
+<span class="fc" id="L112">                    next.add(tn);</span>
+<span class="fc" id="L113">                }</span>
+<span class="fc" id="L114">            }</span>
+<span class="fc" id="L115">            check.clear();</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">            for (N n : next) {</span>
+<span class="fc" id="L117">                check.add(n);</span>
+<span class="fc" id="L118">            }</span>
+<span class="fc" id="L119">            next.clear();</span>
+        }
+
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        for (N n: children) depthMap.remove(n);</span>
+<span class="fc" id="L123">        delegate.removeVertex(vertex);</span>
+
+<span class="fc" id="L125">        return true;</span>
+    }
+
+    @Override
+    public boolean containsEdge(@NotNull N source, @NotNull N target) {
+        // TODO: implement this
+<span class="fc" id="L131">        return delegate.containsEdge(source, target);</span>
+    }
+
+    @Override
+    public boolean addEdge(@NotNull N source, @NotNull N target) {
+        // TODO: implement this
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        if(!depthMap.containsKey(source)) return false;</span>
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if(depthMap.containsKey(target)) return false;</span>
+<span class="fc" id="L139">        depthMap.put(target, depthMap.get(source) + 1);</span>
+<span class="fc" id="L140">        delegate.addEdge(source, target);</span>
+<span class="fc" id="L141">        return true;</span>
+    }
+
+    @Override
+    public boolean removeEdge(@NotNull N source, @NotNull N target) {
+        // TODO: implement this
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        if(!depthMap.containsKey(target)) return false;</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">        if(!delegate.getSources(target).contains(source)) return false;</span>
+<span class="fc" id="L149">        removeVertex(target);</span>
+<span class="fc" id="L150">        return true;</span>
+    }
+
+    @Override
+    public @NotNull Set&lt;N&gt; getSources(N target) {
+        // TODO: implement this
+<span class="fc" id="L156">        return delegate.getSources(target);</span>
+    }
+
+    @Override
+    public @NotNull Set&lt;N&gt; getTargets(N source) {
+        // TODO: implement this
+<span class="fc" id="L162">        return delegate.getTargets(source);</span>
+    }
+
+    @Override
+    public @NotNull Set&lt;N&gt; getVertices() {
+        // TODO: implement this
+<span class="fc" id="L168">        return delegate.getVertices();</span>
+    }
+
+    @Override
+    public @NotNull Set&lt;Edge&lt;N&gt;&gt; getEdges() {
+        // TODO: implement this
+<span class="fc" id="L174">        return delegate.getEdges();</span>
+    }
+
+    /**
+     * Checks if all class invariants hold for this object
+     *
+     * @return true if the representation of this tree is valid
+     */
+    boolean checkInv() {
+        // TODO: implement this
+<span class="fc" id="L184">        Set&lt;N&gt; check = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L185">        Set&lt;N&gt; next = new HashSet&lt;&gt;();</span>
+
+<span class="fc" id="L187">        int depth = 0;</span>
+
+<span class="fc" id="L189">        check.add(root);</span>
+
+<span class="fc bfc" id="L191" title="All 2 branches covered.">        while(!check.isEmpty()) {</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">            for (N n : check) {</span>
+<span class="pc bpc" id="L193" title="1 of 2 branches missed.">                if (depthMap.get(n) != depth) return false;</span>
+<span class="fc" id="L194">                next.addAll(delegate.getTargets(n));</span>
+<span class="fc" id="L195">            }</span>
+
+<span class="fc" id="L197">            check.clear();</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">            for (N n : next) {</span>
+<span class="fc" id="L199">                check.add(n);</span>
+<span class="fc" id="L200">            }</span>
+<span class="fc" id="L201">            next.clear();</span>
+
+<span class="fc" id="L203">            depth++;</span>
+        }
+
+<span class="fc" id="L206">        return true;</span>
+    }
+
+    /**
+     * Provides a human-readable string representation for the abstract value of the tree
+     *
+     * @return a string representation
+     */
+    @Override
+    public String toString() {
+<span class="fc" id="L216">        return String.format(&quot;[root: %s, vertex: {%s}, edge: {%s}]&quot;,</span>
+                root,
+<span class="fc" id="L218">                getVertices().stream().map(N::toString).collect(Collectors.joining(&quot;, &quot;)),</span>
+<span class="fc" id="L219">                getEdges().stream().map(Edge::toString).collect(Collectors.joining(&quot;, &quot;)));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
